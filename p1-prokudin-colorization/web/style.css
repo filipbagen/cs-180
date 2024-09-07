@@ -81,6 +81,11 @@ h2 {
   overflow: hidden; /* Disable container overflow */
 }
 
+#hero {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
 hr {
   border: 1px solid var(--accent-color);
   border-radius: 999px;
@@ -91,9 +96,9 @@ hr {
 /* Sticky sidebar that doesn't scroll over the navbar */
 .sidebar {
   color: var(--sidebar-text);
-  width: 320px; /* Set a fixed width */
-  /* min-width: 250px; */
-  /* max-width: 250px; */
+  width: 320px;
+  min-width: 320px;
+  max-width: 320px;
   padding: 1rem 2rem;
   position: sticky;
   top: 68px; /* Start the sidebar just below the navbar */
@@ -129,8 +134,7 @@ hr {
 /* Main content should be the only scrollable section */
 .content {
   flex-grow: 1;
-  padding: 2rem;
-  margin-left: 2.5rem;
+  padding: 2rem 4rem;
   overflow-y: auto; /* Independent scrolling for content */
   height: 100%;
   position: relative;
