@@ -23,12 +23,21 @@
       <nav class="sidebar">
         <ul>
           <li><a href="#section1">Introduction</a></li>
-          <li><a href="#section2">Getting Started</a></li>
-          <li><a href="#section3">The Content Editor</a></li>
-          <li><a href="#section4">Fetching Data</a></li>
-          <li><a href="#section5">Custom Fields</a></li>
-          <li><a href="#section6">Environment Variables</a></li>
-          <li><a href="#section7">FAQs</a></li>
+
+          <li><a href="#section2">Method</a></li>
+          <li><a href="#section2.1" class="sub">Segmentation</a></li>
+          <li><a href="#section2.2" class="sub">Normalized Cross Correlation (NCC)</a></li>
+          <li><a href="#section2.3" class="sub">Image Pyramid</a></li>
+          <li><a href="#section2.4" class="sub">Contrast</a></li>
+          <li><a href="#section2.5" class="sub">White Balance</a></li>
+
+          <li><a href="#section3">Result</a></li>
+          <li><a href="#section3.1" class="sub">Contrast</a></li>
+          <li><a href="#section3.2" class="sub">White Balance</a></li>
+          <li><a href="#section3.3" class="sub">Contrast + WB</a></li>
+
+          <li><a href="#section4">Challenges</a></li>
+          <li><a href="#section5">Extras</a></li>
         </ul>
       </nav>
 
@@ -37,9 +46,9 @@
           <h1>Project 1 - Colorizing the Prokudin-Gorskii Photo Collection</h1>
           <p>Filip Malm-Bägén</p>
           <hr />
-          <img id="hero" src="image.png" alt="" />
+          <img id="hero" src="sculpture.jpg" alt="" />
           <p>
-            In the early 1900, Prokudin-Gorskii traveled across the Russian
+            In the early 1900s, Prokudin-Gorskii traveled across the Russian
             Empire and took photographs of the people, landscapes, and
             architecture. His photographs were taken in black and white, but he
             used a special camera that took three photographs in quick
@@ -48,40 +57,163 @@
             the time, so Prokudin-Gorskii's photographs were not seen in color
             until the 2000s when they were digitized and the color channels were
             aligned. This project is about colorizing the Prokudin-Gorskii photo
-            using the three black and white images. Additionaly, methods of
-            automaticaly contrasting and adjusting the white balance of the
-            images are implemented.
+            using the three black and white images, to produce the intended
+            color photos whitnessed by the photogorapher himself. Additionaly,
+            methods of automaticaly contrasting and adjusting the White Balance
+            of the images are implemented.
           </p>
         </section>
 
         <section id="section2">
-          <h2>Getting Started</h2>
-          <p>[Steps for getting started]</p>
+          <h2>Method</h2>
+          <p>
+            The task of colorizing the Prokudin-Gorskii photo collection was not
+            a trivial one. The process required careful alignment of the three
+            color channels, all of which used an image pyramid to calculate the
+            best alignment. Thereafter, the images were adjusted for automatic
+            White Balance and contrast.
+          </p>
+        </section>
+
+        <section id="section2.1">
+          <h3>Segmentation</h3>
+          <p>
+            The image is divided into three parts, each representing a color
+            channel. The blue channel is treated as the base image, and the
+            green and red channels are aligned to the blue channel.
+          </p>
+        </section>
+
+        <section id="section2.2"></section>
+          <h3>Normalized Cross Correlation (NCC)</h3>
+          <p>
+            In order to align the green and red channels to the blue channel,
+            the normalized cross-correlation (NCC) was used as a scoring index 
+            for each alignment. A search window of [-15, 15] pixels were used to 
+            find the best alignment in the x and y directions. At each new position, 
+            the NCC is calculated and compared to the best score. The position with 
+            the highest similarity score is considered the best alignment. It was 
+            discovered early that a peeking window of half the size of the search 
+            window was sufficient to find the best alignment. If the whole image was 
+            used, the process would take too long to complete and the result would 
+            be worse due to the unpredicible borders of each color channel.
+          </p>
+        </section>
+
+        <section id="section2.3"></section>
+          <h3>Image Pyramid</h3>
+          <p>
+            Given the large size of the images, computing Normalized Cross-Correlation (NCC) for every possible pixel position directly was impractical. To manage this, an image pyramid approach was used to downsample the images, reducing their size by factors of 3, 9, and 27. The pyramid_scaledown function was employed to create these smaller image versions, smoothing and downsampling them. At each pyramid level, alignment was initialized with the coarsest image and progressively refined as the images were scaled to higher resolutions. NCC was calculated on centered images to avoid edge effects, and the best alignment at each level guided the search for finer adjustments. This method efficiently handles large displacements and achieves accurate alignment by leveraging progressively smaller images and refining the results iteratively.
+          </p>
+        </section>
+
+        <section id="section2.4"></section>
+          <h3>Contrast</h3>
+          <p>
+            The auto-contrast algorithm enhances image contrast by redistributing pixel intensities across the full range. It calculates the frequency of each intensity level, computes a cumulative distribution function (CDF), and normalizes it. This normalized CDF is used to remap the pixel intensities, stretching the contrast and improving the image's overall appearance.
+          </p>
+        </section>
+
+        <section id="section2.4"></section>
+          <h3>White Balance</h3>
+          <p>
+            The auto-white balance algorithm adjusts the colors of an image to correct color casts. It computes the average color of the image and then scales each color channel to a target gray point. This adjustment helps ensure that the image colors appear more neutral. Finally, the algorithm clips the values to ensure they stay within the valid range, resulting in a balanced image with corrected colors.
+          </p>
         </section>
 
         <section id="section3">
-          <h2>The Content Editor</h2>
-          <p>[Details about content editing]</p>
+          <h2>Result</h2>
+          <p>
+            Below are the results of the colorized Prokudin-Gorskii photo.
+          </p>
+          <h3>Original images</h3>
+          <div class="image-grid">
+            <div class="image-item">
+              <img src="../result/img/church.jpg" alt="church">
+              <p>Description for image 1</p>
+            </div>
+            
+            <div class="image-item">
+              <img src="../result/img/emir.jpg" alt="emir">
+              <p>Description for image 2</p>
+            </div>
+
+            <div class="image-item">
+              <img src="../result/img/harvesters.jpg" alt="harvesters">
+              <p>Description for image 3</p>
+            </div>
+
+            <div class="image-item">
+              <img src="../result/img/icon.jpg" alt="icon">
+              <p>Description for image 4</p>
+            </div>
+
+            <div class="image-item">
+              <img src="../result/img/lady.jpg" alt="lady">
+              <p>Description for image 4</p>
+            </div>
+            
+            <div class="image-item">
+              <img src="../result/img/melons.jpg" alt="melons">
+              <p>Description for image 4</p>
+            </div>
+
+            <div class="image-item">
+              <img src="../result/img/onion_church.jpg" alt="onion church">
+              <p>Description for image 1</p>
+            </div>
+            
+            <div class="image-item">
+              <img src="../result/img/sculpture.jpg" alt="sculpture">
+              <p>Description for image 2</p>
+            </div>
+
+            <div class="image-item">
+              <img src="../result/img/self_portrait.jpg" alt="self portrait">
+              <p>Description for image 3</p>
+            </div>
+
+            <div class="image-item">
+              <img src="../result/img/three_generations.jpg" alt="three generations">
+              <p>Description for image 4</p>
+            </div>
+
+            <div class="image-item">
+              <img src="../result/img/train.jpg" alt="train">
+              <p>Description for image 4</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="section3.1">
+          <h3>Contrast</h3>
+          <p>
+            [Information about contrast]
+          </p>
+        </section>
+
+        <section id="section3.2">
+          <h3>White Balance</h3>
+          <p>
+            [Information about White Balance]
+          </p>
+        </section>
+
+        <section id="section3.3">
+          <h3>Contrast + WB</h3>
+          <p>
+            [Information about contrast + White Balance]
+          </p> 
         </section>
 
         <section id="section4">
-          <h2>Fetching Data</h2>
+          <h2>Challenges</h2>
           <p>[Information about data fetching]</p>
         </section>
 
         <section id="section5">
-          <h2>Custom Fields</h2>
+          <h2>Extras</h2>
           <p>[Custom fields explanation]</p>
-        </section>
-
-        <section id="section6">
-          <h2>Environment Variables</h2>
-          <p>[Environment variables setup]</p>
-        </section>
-
-        <section id="section7">
-          <h2>FAQs</h2>
-          <p>[Frequently asked questions]</p>
         </section>
       </main>
     </div>
