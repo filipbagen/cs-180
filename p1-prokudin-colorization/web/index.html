@@ -61,17 +61,17 @@
           <p>
             In the early 1900s, Prokudin-Gorskii traveled across the Russian
             Empire and took photographs of the people, landscapes, and
-            architecture. His photographs were taken in black and white, but he
+            architecture. His pictures were taken in black-and-white, but he
             used a special camera that took three photographs in quick
-            succession, each with a different color filter (red, green, and
-            blue). The technology to print color photographs did not exist at
-            the time, so Prokudin-Gorskii's photographs were not seen in color
-            until the 2000s when they were digitized and the color channels were
-            aligned. This project is about colorizing the Prokudin-Gorskii photo
-            using the three black and white images, to produce the intended
-            color photos whitnessed by the photogorapher himself. Additionaly,
-            methods of automaticaly contrasting and adjusting the White Balance
-            of the images are implemented.
+            succession, each with a different color filter (red, green blue).
+            The technology to print color photographs did not exist at the time,
+            so Prokudin-Gorskii's photographs were not seen in color until the
+            2000s when they were digitized and the color channels were aligned.
+            This project is about colorizing the Prokudin-Gorskii photo using
+            the three black and white images, to produce the intended color
+            photos witnessed by the photographer himself. Additionally, methods
+            of automatically contrasting and adjusting the white balance of the
+            images are implemented.
           </p>
         </section>
 
@@ -82,7 +82,7 @@
             a trivial one. The process required careful alignment of the three
             color channels, all of which used an image pyramid to calculate the
             best alignment. Thereafter, the images were adjusted for automatic
-            White Balance and contrast.
+            white balance and contrast.
           </p>
         </section>
 
@@ -91,7 +91,7 @@
           <p>
             The image was divided into three parts, each representing a color
             channel. The blue channel was treated as the base image, and the
-            green and red channels are aligned to the blue channel.
+            green and red channels were aligned to the blue channel.
           </p>
         </section>
 
@@ -99,8 +99,8 @@
           <h3>Normalized Cross Correlation (NCC)</h3>
           <p>
             In order to align the green and red channels to the blue channel,
-            the normalized cross-correlation (NCC) was used as a scoring index
-            for each alignment. A search window of [-15, 15] pixels were used to
+            the Normalized Cross-Correlation (NCC) was used as a scoring index
+            for each alignment. A search window of [-15, 15] pixels was used to
             find the best alignment in the x and y directions. At each new
             position, the NCC was calculated and compared to the best score. The
             position with the highest similarity score was considered the best
@@ -111,14 +111,13 @@
         <section id="section2.3">
           <h3>Image Pyramid</h3>
           <p>
-            Given the large size of the images, computing Normalized
-            Cross-Correlation (NCC) for every possible pixel position directly
-            was impractical. To manage this, an image pyramid approach was used
-            to downsample the images, reducing their size by factors of 3, 9,
-            and 27. The pyramid_scaledown function was employed to create these
-            smaller image versions, smoothing and downsampling them. At each
-            pyramid level, alignment was initialized with the coarsest image and
-            progressively refined as the images were scaled to higher
+            Given the large size of the images, computing NCC for every possible
+            pixel position directly was impractical. To manage this, an image
+            pyramid approach was used to downsample the images, reducing their
+            size by a factor of 3. The pyramid_scaledown function was used to
+            create the smaller image versions, smoothing and downsampling them.
+            At each pyramid level, alignment was initialized with the coarsest
+            image and progressively refined as the images were scaled to higher
             resolutions. NCC was calculated on centered images to avoid edge
             effects, and the best alignment at each level guided the search for
             finer adjustments. This method efficiently handles large
@@ -130,12 +129,12 @@
         <section id="section2.4">
           <h3>Sobel Filter</h3>
           <p>
-            For the image "emir", the color channels does not match in their
-            brigtness values, which made it difficult to align the channels. To
-            solve this, an edge detection algorithm using a sobel filter was
-            used to enhance the edges of the image. These edge-images where send
-            through the same align function in order to stich the channels
-            togheter.
+            For the image "emir.tif", the color channels do not match their
+            brightness values, which made it difficult to align the channels. To
+            solve this, an edge detection algorithm using a Sobel filter was
+            used to enhance the edges of the image. These edge images were sent
+            through the same align function in order to stitch the channels
+            together.
           </p>
         </section>
 
@@ -289,7 +288,8 @@
             half the size of the image was sufficient to find the best
             alignment. If the whole image was used, the process would take too
             long to complete and the result would be worse due to the
-            unpredicible borders of each color channel disturbing the alignment.
+            unpredictable borders of each color channel disturbing the
+            alignment.
           </p>
         </section>
 
@@ -298,7 +298,7 @@
           <p>
             In addition to the colorization of the Prokudin-Gorskii photo
             collection, I also adjusted the images for automatic contrast and
-            white balance. Below are the results of these adjustments.
+            white balance. Below are the results of a few of these adjustments.
           </p>
 
           <section id="section5.1">
@@ -434,7 +434,7 @@
         <section id="section6">
           <h2>Conclusion</h2>
           <p>
-            As seen on the result above, the colorization of the
+            As seen in the result above, the colorization of the
             Prokudin-Gorskii photo collection was a success. The images were
             aligned and colorized using the three black and white images. The
             images were also adjusted for automatic contrast and white balance,
@@ -443,24 +443,24 @@
           <p>
             The contrast increased a lot for the onion church and the melons,
             while the contrast for the sculpture was not as significant. The
-            automatic white balance improved the images slightly, especily for
-            the sculpture and the melons. The algortihms seems to darken the
-            harvesters image, which was not the intended result. For the
+            automatic white balance improved the images slightly, especially for
+            the sculpture and the melons. The algorithms seem to darken the
+            harvesters' image, which was not the intended result. For the
             selection of the images, the combination of contrast and white
-            balance appears to worsen every image, expect for the sculpture. The
-            onion church especily got its details sharpened and the combination
-            made the image appear overly processes. The rest of the images can
-            be seen
+            balance appears to worsen every image, except for the sculpture. The
+            onion church especially got its details sharpened and the
+            combination made the image appear overly processed. The rest of the
+            images can be seen
             <a
               href="https://github.com/filipbagen/cs-180/tree/main/p1-prokudin-colorization/result"
               >here</a
             >.
           </p>
           <p>
-            If i were to continue working on this project, I would try to
+            If I were to continue working on this project, I would try to
             improve the contrast and white balance algorithms to better suit the
-            images. I would also like to automaticaly cut the borders of the
-            images, as they create an odd effect when the images are stiched at
+            images. I would also like to automatically cut the borders of the
+            images, as they create an odd effect when the images are stitched at
             the margins.
           </p>
           <p>
