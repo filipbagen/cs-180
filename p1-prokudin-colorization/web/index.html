@@ -291,6 +291,27 @@
             unpredictable borders of each color channel disturbing the
             alignment.
           </p>
+
+          <p>
+            The image "emir.tif" was particularly challenging due to the
+            mismatch of the color channels. The edge detection algorithm using a
+            Sobel filter was used to enhance the edges of the image, which
+            improved the alignment of the channels.
+          </p>
+
+          <p>
+            The image pyramid algorithm was also challenging to implement. When
+            running the algorithm without the image pyramid, the process takes
+            around 6.2 minutes to complete and the result is worse than when
+            using the image pyramid. With the image pyramid, the process takes
+            around 8 seconds to complete on the same machine and the result is
+            significantly better. That is about 50x faster. I belive the poor
+            result is because the image is too large and the NCC algorithm is
+            not able to find the best alignment efficiently. The [15, 15] search
+            window gives no real change on the large image. Therefore the
+            downscale of the image is necessary to let the window find its
+            approximate alignment at each layer.
+          </p>
         </section>
 
         <section id="section5">
