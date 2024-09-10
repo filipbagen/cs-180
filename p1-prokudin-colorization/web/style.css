@@ -10,7 +10,7 @@ body {
   font-family: sans-serif;
   background-color: var(--bg-color);
   color: var(--text-color);
-  overflow: hidden; /* Disable default body scroll */
+  /* overflow: hidden; Disable default body scroll */
 }
 
 .toggle-mode i {
