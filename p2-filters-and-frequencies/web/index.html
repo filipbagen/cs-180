@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project 2 - Fun with Filters and Frequencies</title>
+    <link rel="stylesheet" href="../../style.css" />
+    <script
+      src="https://kit.fontawesome.com/bde765b426.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="logo">CS-180</div>
+      <button class="toggle-mode">
+        <i class="fa-regular fa-sun fa-sm sun-icon"></i>
+        <i class="fa-regular fa-moon fa-sm moon-icon"></i>
+      </button>
+    </header>
+
+    <div class="container">
+      <nav class="sidebar">
+        <ul>
+          <li><a href="#section1">Introduction</a></li>
+
+          <li><a href="#section2">Method</a></li>
+          <li><a href="#section2.1" class="sub">Segmentation</a></li>
+          <li>
+            <a href="#section2.2" class="sub"
+              >Normalized Cross Correlation (NCC)</a
+            >
+          </li>
+          <li><a href="#section2.3" class="sub">Image Pyramid</a></li>
+          <li><a href="#section2.4" class="sub">Sobel Filter</a></li>
+          <li><a href="#section2.5" class="sub">Contrast</a></li>
+          <li><a href="#section2.6" class="sub">White Balance</a></li>
+
+          <li><a href="#section3">Result</a></li>
+          <li><a href="#section3.1" class="sub">Original Images</a></li>
+
+          <li><a href="#section4">Challenges</a></li>
+
+          <li><a href="#section5">Extras</a></li>
+          <li><a href="#section5.1" class="sub">Contrast</a></li>
+          <li><a href="#section5.2" class="sub">White Balance</a></li>
+          <li>
+            <a href="#section5.3" class="sub">Contrast + White Balance</a>
+          </li>
+
+          <li><a href="#section6">Conclusion</a></li>
+        </ul>
+      </nav>
+
+      <main class="content">
+        <section id="section1">
+          <h1>Project 2 - Fun with Filters and Frequencies</h1>
+          <p>Filip Malm-Bägén</p>
+          <hr />
+          <img id="hero" src="sculpture.jpg" alt="" />
+          <p>
+            This project explores various techniques for processing and
+            enhancing images through the use of filters and frequencies. First,
+            it demonstrates edge detection using finite difference operators and
+            smoothing filters like the derivative of Gaussian (DoG). Then, the
+            project delves into image sharpening through unsharp masking by
+            emphasizing high-frequency components. Hybrid images are created by
+            blending the high frequencies of one image with the low frequencies
+            of another, producing visually dynamic results. Finally, the project
+            explores multiresolution blending using Gaussian and Laplacian
+            stacks to seamlessly merge images across different frequency bands.
+          </p>
+        </section>
+
+        <p>
+          <i>This webpage design was partly made with generative AI models.</i>
+        </p>
+      </main>
+    </div>
+
+    <script>
+      const toggleButton = document.querySelector('.toggle-mode');
+      const body = document.body;
+
+      // Function to set the appropriate icon based on the mode
+      function updateIcons() {
+        if (body.classList.contains('dark-mode')) {
+          document.querySelector('.sun-icon').style.display = 'none';
+          document.querySelector('.moon-icon').style.display = 'inline-block';
+        } else {
+          document.querySelector('.sun-icon').style.display = 'inline-block';
+          document.querySelector('.moon-icon').style.display = 'none';
+        }
+      }
+
+      // Check if dark mode is enabled in localStorage when page loads
+      if (localStorage.getItem('dark-mode') === 'enabled') {
+        body.classList.add('dark-mode');
+        updateIcons();
+      } else {
+        updateIcons(); // Ensure the icons are set correctly for light mode
+      }
+
+      // Toggle between light and dark mode on button click
+      toggleButton.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+
+        // Save the dark mode state to localStorage
+        if (body.classList.contains('dark-mode')) {
+          localStorage.setItem('dark-mode', 'enabled');
+        } else {
+          localStorage.removeItem('dark-mode');
+        }
+
+        // Update the icons when the mode is toggled
+        updateIcons();
+      });
+    </script>
+  </body>
+</html>
