@@ -24,17 +24,9 @@
         <ul>
           <li><a href="#section1">Introduction</a></li>
 
-          <li><a href="#section2">Method</a></li>
-          <li><a href="#section2.1" class="sub">Segmentation</a></li>
-          <li>
-            <a href="#section2.2" class="sub"
-              >Normalized Cross Correlation (NCC)</a
-            >
-          </li>
-          <li><a href="#section2.3" class="sub">Image Pyramid</a></li>
-          <li><a href="#section2.4" class="sub">Sobel Filter</a></li>
-          <li><a href="#section2.5" class="sub">Contrast</a></li>
-          <li><a href="#section2.6" class="sub">White Balance</a></li>
+          <li><a href="#section2">Finite Difference Operator</a></li>
+          <li><a href="#section2.1" class="sub">Approach</a></li>
+          <li><a href="#section2.2" class="sub">Result</a></li>
 
           <li><a href="#section3">Result</a></li>
           <li><a href="#section3.1" class="sub">Original Images</a></li>
@@ -57,19 +49,226 @@
           <h1>Project 2 - Fun with Filters and Frequencies</h1>
           <p>Filip Malm-Bägén</p>
           <hr />
-          <img id="hero" src="sculpture.jpg" alt="" />
+          <img id="hero" src="../data/taj.jpg" alt="" />
+          <h2>Introduction</h2>
           <p>
-            This project explores various techniques for processing and
-            enhancing images through the use of filters and frequencies. First,
-            it demonstrates edge detection using finite difference operators and
-            smoothing filters like the derivative of Gaussian (DoG). Then, the
-            project delves into image sharpening through unsharp masking by
-            emphasizing high-frequency components. Hybrid images are created by
-            blending the high frequencies of one image with the low frequencies
-            of another, producing visually dynamic results. Finally, the project
-            explores multiresolution blending using Gaussian and Laplacian
-            stacks to seamlessly merge images across different frequency bands.
+            This project explores using frequencies to process and combine
+            images. The project shows the process and result of sharpening
+            images by emphasizing high frequencies, extracting edges with finite
+            difference kernels, creating hybrid images by blending high and low
+            frequencies from different images, and blending images at various
+            frequencies using Gaussian and Laplacian stacks.
           </p>
+        </section>
+
+        <section id="section2">
+          <h2>Finite Difference Operator</h2>
+        </section>
+
+        <section id="section2.1">
+          <h3>Approach</h3>
+          <p>
+            To compute the partial derivatives in the x and y directions of the
+            "cameraman" image, I first created finite difference kernels as
+            Numpy arrays: <code>D_x = np.array([[1, -1]])</code> and
+            <code>y = np.array([[1], [-1]])</code>. Using
+            <code>scipy.signal.convolve2d</code> with <code>mode='same'</code>,
+            I convolved the image with these kernels to obtain the partial
+            derivative images, which represent the changes in pixel intensity in
+            the x and y directions, respectively. Thereafter, I computed the
+            gradient magnitude image using the formula
+            <code
+              >np.sqrt(partial_derivative_x ** 2 + partial_derivative_y **
+              2)</code
+            >, which combines the two partial derivatives to highlight the edge
+            strength at each pixel. To create an edge image, I applied a
+            threshold to the gradient magnitude image,
+            <code>Threshold = 0.2</code>. Selecting the threshold value through
+            trial and error to balance noise suppression with the visibility of
+            real edges.
+          </p>
+        </section>
+
+        <section id="section2.2">
+          <h3>Result</h3>
+
+          <figure>
+            <img
+              src="./result/partial_derivatives.png"
+              alt="Partial derivatives of the cameraman image"
+            />
+            <figcaption>Partial derivatives of the cameraman image</figcaption>
+          </figure>
+
+          <figure>
+            <img
+              src="./result/gradient_magnitude.png"
+              alt="Gradient magnitude image of the cameraman"
+            />
+            <figcaption>Gradient magnitude image of the cameraman</figcaption>
+          </figure>
+        </section>
+
+        <section id="section3">
+          <h2>Derivative of Gaussian (DoG) Filter</h2>
+          <p>
+            First, the cameraman is blurred using a Gaussian filter, made using
+            <code>cv2.getGaussianKernel</code> with kernel size
+            <code>6</code> and sigma <code>1.0</code>. Afterwards, the image
+            gradient magnitude of the blurred image is computed using the same
+            method as in the previous section. Finally, the blurry gradient
+            magnitude image is thresholded to create an edge image. The
+            threshold value was set to <code>0.05</code> in order to correspond
+            to the result of the previous binarized cameraman.
+          </p>
+
+          <p>
+            There is a clear difference in the final result. The most obvious
+            one is that the edges are thicker for the binarized edges and
+            rounder that previously.
+          </p>
+
+          <figure>
+            <img
+              src="./result/partial_derivatives_of_blurred.png"
+              alt="Partial derivatives of the blurred cameraman image"
+            />
+            <figcaption>
+              Partial derivatives of the blurred cameraman image
+            </figcaption>
+          </figure>
+
+          <figure>
+            <img
+              src="./result/grad_mag_bin_grad.png"
+              alt="Gradient magnitude image of the blurred cameraman"
+            />
+            <figcaption>
+              Gradient magnitude image of the blurred cameraman
+            </figcaption>
+          </figure>
+
+          <figure>
+            <img
+              src="./result/comparason_bin.png"
+              alt="Comparison of binarized gradient magnitude images"
+            />
+            <figcaption>
+              Comparison of binarized gradient magnitude images
+            </figcaption>
+          </figure>
+
+          <p>
+            The two images are essentially the same. If looking closely, the
+            grass and other small details differ, but the overall image is the
+            same.
+          </p>
+        </section>
+
+        <section id="section4">
+          <h2>Image "Sharpening"</h2>
+          <p>
+            To sharpen an image, the image was first convolved with a Gaussian
+            filter, to filter out the high frequencies, which resulted in a
+            blurry image. The high frequencies were then extracted by
+            subtracting the blurry image from the original image. Finally, the
+            high frequencies were added back to the original image to create a
+            sharpened image, using
+            <code>sharpened_img = img + alpha * details</code>, where
+            <code>alpha</code> is a constant sharpening factor.
+          </p>
+        </section>
+
+        <section id="section4.1">
+          <h2>Taj Mahal</h2>
+          <p>
+            The Taj Mahal image was sharpened using a sharpening factor of
+            <code>0.75</code>. As seen, the sharpened image has more defined
+            edges and details compared to the original image.
+          </p>
+
+          <figure>
+            <img
+              src="./result/sharpened_taj.png"
+              alt="Sharpened image of the Taj Mahal"
+            />
+            <figcaption>Sharpened image of the Taj Mahal</figcaption>
+          </figure>
+        </section>
+
+        <section id="section4.2">
+          <h2>Camera Obscura</h2>
+          <p>
+            A couple of weeks ago, I had the opportunity to visit the "Camera
+            Obscura & Holograph Gallery" in San Francisco. It was very
+            interesing to see how the camera obscura works and how it can be
+            used to create images. Unfortunately, the resulting image lacked
+            sharpness... Luckily, I now know an algorithm to sharpen images! I
+            used <code>alpha = 6.0</code> and the resulting image is sharper
+            than ever. The edges around the horizon and windows are much more
+            defined, but the image is also noisier.
+          </p>
+
+          <figure>
+            <img
+              src="./result/camera_obscura.png"
+              alt="Sharpened image of the Camera Obscura"
+            />
+            <figcaption>Sharpened image of the Camera Obscura</figcaption>
+          </figure>
+        </section>
+
+        <section id="section4.3">
+          <h2>Swedish Midsummer 🇸🇪</h2>
+          <p>
+            In Sweden, Midsummer is the biggest holiday of the year. We eat a
+            lot of pickled herring and strawberries, and we celebrate all day
+            and all night, usually up until the sun rises again. I captured this
+            image of my friends dancing at midnight, but due to the lack of
+            light, the image turned out blurry... But by sharpening the image
+            with <code>alpha = 2.0</code>, the image is now a bit clearer. The
+            image lacks information to begin with (I can't enhance something
+            which does not exist), but the edges are more defined than before.
+          </p>
+
+          <figure>
+            <img
+              src="./result/midsummer.png"
+              alt="Sharpened image of Swedish Midsummer celebration"
+            />
+            <figcaption>
+              Sharpened image of Swedish Midsummer celebration
+            </figcaption>
+          </figure>
+        </section>
+
+        <section id="section4.4">
+          <h2>Lena</h2>
+          <p>
+            Finally, the Lena image was first blurred using a Gaussian filter
+            with <code>kernel = 15</code> and <code>sigma = 2.0</code>.
+            Thereafter, I sharpened the image using <code>alpha = 4.0</code>,
+            with the ambition to make the sharpened image look like the original
+            image. The sharpened image looks somewhat similar to the original
+            image. As a measure of similarity, I computed the mean squared error
+            (MSE) and the Structural Similarity Index (SSIM) between the
+            original and sharpened images. MSE measures the average squared
+            difference between the two images. A lower MSE indicates a closer
+            match between the images. SSIM is a perceptual metric that measures
+            the similarity between two images. A higher SSIM indicates a closer
+            match between the images and 0 indicates no similarity. The MSE and
+            SSIM values were <code>19 766</code> and <code>0.0046</code>,
+            respectively. The values indicates that the sharpened image is not
+            similar to the original image at all. This might happen because
+            sharpening can create new edges and artifacts, making the pixel
+            values differ a lot. As a result, the metrics show low similarity,
+            even if the image looks somewhat similar to you.
+          </p>
+
+          <figure>
+            <img src="./result/lena.png" alt="" />
+            <figcaption></figcaption>
+          </figure>
         </section>
 
         <p>
