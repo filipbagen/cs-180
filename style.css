@@ -47,6 +47,12 @@ h2 {
   font-size: 24px !important;
 }
 
+code {
+  background-color: var(--accent-color);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
 /* Navbar fixed at the top */
 .navbar {
   color: var(--navbar-text);
@@ -265,6 +271,18 @@ button:hover {
   width: 100%; /* Adjust based on your image size and layout preferences */
   height: auto;
   margin-bottom: 10px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+figcaption {
+  font-size: 0.875rem;
+  color: var(--sidebar-text);
+  text-align: center;
+  margin-bottom: 22px;
 }
 
 .column h4 {
