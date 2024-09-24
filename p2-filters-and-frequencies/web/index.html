@@ -28,19 +28,31 @@
           <li><a href="#section2.1" class="sub">Approach</a></li>
           <li><a href="#section2.2" class="sub">Result</a></li>
 
-          <li><a href="#section3">Result</a></li>
-          <li><a href="#section3.1" class="sub">Original Images</a></li>
+          <li><a href="#section3">Derivative of Gaussian (DoG) Filter</a></li>
 
-          <li><a href="#section4">Challenges</a></li>
+          <li><a href="#section4">Image "Sharpening"</a></li>
+          <li><a href="#section4.1" class="sub">Taj Mahal</a></li>
+          <li><a href="#section4.2" class="sub">Camera Obscura</a></li>
+          <li><a href="#section4.3" class="sub">Swedish Midsummer 🇸🇪</a></li>
+          <li><a href="#section4.4" class="sub">Lena</a></li>
 
-          <li><a href="#section5">Extras</a></li>
-          <li><a href="#section5.1" class="sub">Contrast</a></li>
-          <li><a href="#section5.2" class="sub">White Balance</a></li>
-          <li>
-            <a href="#section5.3" class="sub">Contrast + White Balance</a>
-          </li>
+          <li><a href="#section5">Hybrid Images</a></li>
+          <li><a href="#section5.1" class="sub">Approach</a></li>
+          <li><a href="#section5.2" class="sub">Result</a></li>
+          <li><a href="#section5.3" class="sub">Steve Jozniak</a></li>
+          <li><a href="#section5.4" class="sub">Fourier Analysis</a></li>
+          <li><a href="#section5.5" class="sub">Failure</a></li>
 
-          <li><a href="#section6">Conclusion</a></li>
+          <li><a href="#section6">Gaussian and Laplacian Stacks</a></li>
+          <li><a href="#section6.1" class="sub">Approach</a></li>
+          <li><a href="#section6.2" class="sub">Result</a></li>
+          <li><a href="#section6.3" class="sub">Verification</a></li>
+
+          <li><a href="#section7">Multiresolution Blending</a></li>
+          <li><a href="#section7.1" class="sub">Approach</a></li>
+          <li><a href="#section7.2" class="sub">Result (Orapple)</a></li>
+          <li><a href="#section7.3" class="sub">Irregular mask</a></li>
+          <li><a href="#section7.4" class="sub">Horizontal mask</a></li>
         </ul>
       </nav>
 
@@ -49,7 +61,11 @@
           <h1>Project 2 - Fun with Filters and Frequencies</h1>
           <p>Filip Malm-Bägén</p>
           <hr />
-          <img id="hero" src="../data/taj.jpg" alt="" />
+          <img
+            id="hero"
+            src="../data/basketball_face.png"
+            alt="Blended image of a face and a basketball"
+          />
           <h2>Introduction</h2>
           <p>
             This project explores using frequencies to process and combine
@@ -180,7 +196,7 @@
         </section>
 
         <section id="section4.1">
-          <h2>Taj Mahal</h2>
+          <h3>Taj Mahal</h3>
           <p>
             The Taj Mahal image was sharpened using a sharpening factor of
             <code>0.75</code>. As seen, the sharpened image has more defined
@@ -197,7 +213,7 @@
         </section>
 
         <section id="section4.2">
-          <h2>Camera Obscura</h2>
+          <h3>Camera Obscura</h3>
           <p>
             A couple of weeks ago, I had the opportunity to visit the "Camera
             Obscura & Holograph Gallery" in San Francisco. It was very
@@ -219,7 +235,7 @@
         </section>
 
         <section id="section4.3">
-          <h2>Swedish Midsummer 🇸🇪</h2>
+          <h3>Swedish Midsummer 🇸🇪</h3>
           <p>
             In Sweden, Midsummer is the biggest holiday of the year. We eat a
             lot of pickled herring and strawberries, and we celebrate all day
@@ -243,7 +259,7 @@
         </section>
 
         <section id="section4.4">
-          <h2>Lena</h2>
+          <h3>Lena</h3>
           <p>
             Finally, the Lena image was first blurred using a Gaussian filter
             with <code>kernel = 15</code> and <code>sigma = 2.0</code>.
@@ -266,13 +282,309 @@
           </p>
 
           <figure>
-            <img src="./result/lena.png" alt="" />
-            <figcaption></figcaption>
+            <img src="./result/lena.png" alt="Sharpened image of Lena" />
+            <figcaption>Sharpened image of Lena</figcaption>
           </figure>
         </section>
 
+        <section id="section5">
+          <h2>Hybrid Images</h2>
+        </section>
+
+        <section id="section5.1">
+          <h3>Approach</h3>
+          <p>
+            Two images are taken as input: <code>im1</code> and
+            <code>im2</code>. A Gaussian blur is applied to
+            <code>im2</code> using <code>sigma2</code> to produce the
+            low-frequency image <code>low_frequencies</code>. For the higher
+            frequencies, a Gaussian blur is applied to <code>im1</code> using
+            <code>sigma1</code> to produce <code>blurred_im1</code>, and the
+            high frequencies are extracted as
+            <code>high_frequencies = im1 - blurred_im1</code>. Finally,
+            <code>low_frequencies</code> and <code>high_frequencies</code> are
+            added together pixel-wise to produce the hybrid image.
+          </p>
+
+          <p>
+            The high pass filter has a sigma of <code>3</code> and the low pass
+            filter has a sigma of <code>10</code>.
+          </p>
+        </section>
+
+        <section id="section5.2">
+          <h3>Result</h3>
+          <p></p>
+
+          <div style="display: flex; justify-content: space-around">
+            <figure style="width: 260px">
+              <img src="../data/DerekPicture.jpg" alt="Image of Derek" />
+              <figcaption>Image of Derek</figcaption>
+            </figure>
+
+            <figure style="width: 500px">
+              <img src="../data/nutmeg.jpg" alt="Image of Nutmeg" />
+              <figcaption>Image of Nutmeg</figcaption>
+            </figure>
+
+            <figure style="width: 300px">
+              <img
+                src="./result/derek_nutmeg.png"
+                alt="Hybrid image of Derek and Nutmeg"
+              />
+              <figcaption>Hybrid image of Derek and Nutmeg</figcaption>
+            </figure>
+          </div>
+
+          <p>
+            I also experimented with removing the color to see if the effect
+            would be the better or worse. On this image with these specific
+            values, it seems like the effect is better when the images are in
+            black and white. The colors of Derek was too strong in comparason to
+            the high frequencies of Nutmeg. The hybrid image in black and white
+            is more balanced.
+          </p>
+
+          <figure>
+            <img
+              src="./result/derek_nutmeg_bw.png"
+              alt="Hybrid image of Derek and Nutmeg in black and white"
+            />
+            <figcaption>
+              Hybrid image of Derek and Nutmeg in black and white
+            </figcaption>
+          </figure>
+        </section>
+
+        <section id="section5.3">
+          <h3>Steve Jozniak</h3>
+          <p>
+            I also tried to create a hybrid image of Steve Jobs and Steve Jobs.
+            The high pass filter has a sigma of <code>1</code> and the low pass
+            filter has a sigma of <code>5</code>.
+          </p>
+          <figure>
+            <img
+              src="./result/steve_jozniac.png"
+              alt="Image of Steve Jozniak"
+            />
+            <figcaption>Image of Steve Jozniak</figcaption>
+          </figure>
+        </section>
+
+        <section id="section5.4">
+          <h3>Fourier Analysis</h3>
+          <p>
+            For the Steve Jozniak image, I performed a Fourier transforms to the
+            original input images, the filtered images, and the final hybrid
+            image. This gave the following results.
+          </p>
+
+          <figure>
+            <img
+              src="./result/fourier_analysis.png"
+              alt="Fourier analysis of Steve Jozniak hybrid image"
+            />
+            <figcaption>
+              Fourier analysis of Steve Jozniak hybrid image
+            </figcaption>
+          </figure>
+        </section>
+
+        <section id="section5.5">
+          <h3>Failure</h3>
+          <p>
+            I tried to create this hybrid image where it says "Hello" when the
+            reader is close to the image and "Adios" when the reader is far
+            away. I experimented some with the sigma values but it did not look
+            correct. I belive it can be due to the thin lines. A more bold font
+            migh have been better.
+          </p>
+
+          <div style="display: flex; justify-content: space-around">
+            <figure style="width: 33%">
+              <img src="../data/hello.png" alt="Image with the text 'Hello'" />
+              <figcaption>Image with the text 'Hello'</figcaption>
+            </figure>
+
+            <figure style="width: 33%">
+              <img src="../data/adios.png" alt="Image with the text 'Adios'" />
+              <figcaption>Image with the text 'Adios'</figcaption>
+            </figure>
+
+            <figure style="width: 33%">
+              <img src="./result/hybrid_fail.png" alt="Failed hybrid image" />
+              <figcaption>Failed hybrid image</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section id="section6">
+          <h2>Gaussian and Laplacian Stacks</h2>
+        </section>
+
+        <section id="section6.1">
+          <h3>Approach</h3>
+          <p>
+            Gaussian stacks are generated for each channel of the color images
+            by progressively applying Gaussian blur without downsampling,
+            ensuring that the image size remains constant across all levels. The
+            Laplacian stack is then computed by subtracting consecutive levels
+            of the Gaussian stack, capturing the details lost between the
+            blurred versions at each level, while the final level is the most
+            blurred image from the Gaussian stack. This process is performed
+            separately for each channel of the RGB image, and the stacks are
+            combined to produce multi-level representations that preserve both
+            fine and coarse image details.
+          </p>
+        </section>
+
+        <section id="section6.2">
+          <h3>Result</h3>
+          <figure>
+            <img
+              src="./result/l_stack_apple.png"
+              alt="Laplacian stack of an apple image"
+            />
+            <figcaption>
+              Laplacian stack of an apple image using
+              <code>levels = 5</code> and <code>sigma = 2</code>
+            </figcaption>
+          </figure>
+
+          <figure>
+            <img
+              src="./result/l_stack_orange.png"
+              alt="Laplacian stack of an orange image"
+            />
+            <figcaption>
+              Laplacian stack of an orange image using
+              <code>levels = 5</code> and <code>sigma = 2</code>
+            </figcaption>
+          </figure>
+        </section>
+
+        <section id="section6.3">
+          <h3>Verification</h3>
+          <p>
+            To verify that the algorithm works, the image is reconstructed from
+            the Laplacian stack by progressively adding each level, starting
+            from the most blurred image at the bottom of the stack and moving
+            upwards. The reconstruction process ensures that lost details at
+            each level are reintroduced, with pixel values being clipped to stay
+            within the valid range.
+          </p>
+
+          <div style="display: flex; justify-content: space-around">
+            <figure>
+              <img
+                src="./result/apple_reconstruct.png"
+                alt="Reconstructed image of an apple"
+              />
+              <figcaption>Reconstructed image of an apple</figcaption>
+            </figure>
+
+            <figure>
+              <img
+                src="./result/orange_reconstruct.png"
+                alt="Reconstructed image of an orange"
+              />
+              <figcaption>Reconstructed image of an orange</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section id="section7">
+          <h2>Multiresolution Blending</h2>
+        </section>
+
+        <section id="section7.1">
+          <h3>Approach</h3>
+          <p>
+            Two images are seamlessly blended using Laplacian stacks and a mask.
+            A <code>gaussian_stack</code> is first generated for both images and
+            the mask to capture details at different levels. The
+            <code>laplacian_stack</code> is then computed by subtracting
+            adjacent Gaussian levels, highlighting high-frequency details. The
+            mask, transitioning from 1 to 0, is blurred to create a smooth
+            blend. The stacks are combined using
+            <code>blend_laplacian_stacks</code>, and the final image is
+            reconstructed with <code>reconstruct_image</code>, progressively
+            adding the levels back.
+          </p>
+        </section>
+
+        <section id="section7.2">
+          <h3>Result (Orapple)</h3>
+          <p>
+            <code>levels = 4</code>, <code>sigma = 1.0</code> and
+            <code>sigma_mask = 64</code>
+          </p>
+          <div style="text-align: center">
+            <figure>
+              <img
+                src="./result/blended.png"
+                alt="Blended image of an apple and an orange"
+              />
+              <figcaption>Blended image of an apple and an orange</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section id="section7.3">
+          <h3>Irregular mask</h3>
+          <p>
+            Here i tried to place my face on a basketball. I chose a basketball
+            because I though a basketball had the most similar color to my
+            skintone. <code>levels = 8</code>, <code>sigma = 20</code> and
+            <code>sigma_code = 8</code>.
+          </p>
+
+          <div style="display: flex; justify-content: space-around">
+            <figure style="width: 400px">
+              <img src="../data/filip.jpg" alt="Image of me" />
+              <figcaption>Image of me</figcaption>
+            </figure>
+
+            <figure style="width: 400px">
+              <img src="../data/mask.png" alt="Mask used for blending" />
+              <figcaption>Mask used for blending</figcaption>
+            </figure>
+
+            <figure>
+              <img
+                src="./result/basket_blended.png"
+                alt="Blended image of my face and a basketball"
+              />
+              <figcaption>Blended image of my face and a basketball</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section id="section7.4">
+          <h3>Horizontal mask</h3>
+          <p>
+            For this image, I blended a cactus and an ice cream using a
+            horizontal mask.
+            <code>levels = 6</code>, <code>sigma = 0.4</code> and
+            <code>sigma_mask = 2</code>
+          </p>
+
+          <div style="text-align: center">
+            <figure>
+              <img
+                src="./result/cactus_ice_cream.png"
+                alt="Blended image of a cactus and an ice cream"
+              />
+              <figcaption>
+                Blended image of a cactus and an ice cream
+              </figcaption>
+            </figure>
+          </div>
+        </section>
+
         <p>
-          <i>This webpage design was partly made with generative AI models.</i>
+          <i>This webpage design was partly made using generative AI models.</i>
         </p>
       </main>
     </div>
