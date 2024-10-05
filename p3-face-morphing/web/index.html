@@ -20,53 +20,181 @@
     </header>
 
     <div class="container">
-      <!-- <nav class="sidebar">
+      <nav class="sidebar">
         <ul>
           <li><a href="#section1">Introduction</a></li>
 
-          <li><a href="#section2">Finite Difference Operator</a></li>
+          <li><a href="#section2">Defining Correspondences</a></li>
           <li><a href="#section2.1" class="sub">Approach</a></li>
           <li><a href="#section2.2" class="sub">Result</a></li>
 
-          <li><a href="#section3">Derivative of Gaussian (DoG) Filter</a></li>
+          <li><a href="#section3">Computing the "Mid-way Face"</a></li>
+          <li><a href="#section3.1" class="sub">Approach</a></li>
+          <li><a href="#section3.2" class="sub">Result</a></li>
 
-          <li><a href="#section4">Image "Sharpening"</a></li>
-          <li><a href="#section4.1" class="sub">Taj Mahal</a></li>
-          <li><a href="#section4.2" class="sub">Camera Obscura</a></li>
-          <li><a href="#section4.3" class="sub">Swedish Midsummer 🇸🇪</a></li>
-          <li><a href="#section4.4" class="sub">Lena</a></li>
+          <li><a href="#section4">The Morph Sequence</a></li>
+          <li><a href="#section4.1" class="sub">Approach</a></li>
+          <li><a href="#section4.2" class="sub">Result</a></li>
 
-          <li><a href="#section5">Hybrid Images</a></li>
+          <li><a href="#section5">The "Mean face" of a population</a></li>
           <li><a href="#section5.1" class="sub">Approach</a></li>
           <li><a href="#section5.2" class="sub">Result</a></li>
-          <li><a href="#section5.3" class="sub">Steve Jozniak</a></li>
-          <li><a href="#section5.4" class="sub">Fourier Analysis</a></li>
-          <li><a href="#section5.5" class="sub">Failure</a></li>
-
-          <li><a href="#section6">Gaussian and Laplacian Stacks</a></li>
-          <li><a href="#section6.1" class="sub">Approach</a></li>
-          <li><a href="#section6.2" class="sub">Result</a></li>
-          <li><a href="#section6.3" class="sub">Verification</a></li>
-
-          <li><a href="#section7">Multiresolution Blending</a></li>
-          <li><a href="#section7.1" class="sub">Approach</a></li>
-          <li><a href="#section7.2" class="sub">Result (Orapple)</a></li>
-          <li><a href="#section7.3" class="sub">Irregular mask</a></li>
-          <li><a href="#section7.4" class="sub">Horizontal mask</a></li>
         </ul>
-      </nav> -->
+      </nav>
 
       <main class="content">
         <section id="section1">
           <h1>Project 3 - Face Morphing</h1>
           <p>Filip Malm-Bägén</p>
           <hr />
-          <img
-            id="hero"
-            src="../data/basketball_face.png"
-            alt="Blended image of a face and a basketball"
-          />
+          <img id="hero" src="" alt="" />
           <h2>Introduction</h2>
+          <p>
+            This project goes though into the techniques of seamlessly
+            transitioning between two images by manipulating the mesh of
+            corresponding points and blending the colors. By performing these
+            operations, it is possible to compute the average face of a group
+            and create caricatures derived from this average face.
+          </p>
+        </section>
+
+        <section id="section2">
+          <h2>Defining Correspondences</h2>
+          <p></p>
+        </section>
+
+        <section id="section2.1">
+          <h3>Approach</h3>
+          <p>
+            The corresponding points between two images were defined thoguh this
+            <a
+              href="https://inst.eecs.berkeley.edu/~cs194-26/fa22/upload/files/proj3/cs194-26-aex/tool.html"
+              >tool</a
+            >. I visualized these points on both faces using OpenCV. Then, I
+            calculated the average positions to create a midway shape and
+            applied Delaunay triangulation to these points. This triangulation
+            will guide the smooth transition during the morphing process.
+          </p>
+        </section>
+
+        <section id="section2.2">
+          <h3>Result</h3>
+
+          <div style="display: flex; gap: 10px">
+            <figure>
+              <img
+                src="./img/face_a.png"
+                alt="Face A with correspondance points"
+              />
+              <figcaption>Face A with correspondance points</figcaption>
+            </figure>
+
+            <figure>
+              <img
+                src="./img/face_b.png"
+                alt="Face B with correspondance points"
+              />
+              <figcaption>Face B with correspondance points</figcaption>
+            </figure>
+          </div>
+
+          <figure>
+            <img
+              src="./img/midway_shape.png"
+              alt="Midway shape of face morphing"
+            />
+            <figcaption>Midway shape of face morphing</figcaption>
+          </figure>
+        </section>
+
+        <section id="section3">
+          <h2>Computing the "Mid-way Face"</h2>
+          <p>
+            To compute the "mid-way face", I follow three steps: (1) computing
+            the average shape, (2) warping both faces to that shape, and (3)
+            averaging the warped images' colors.
+          </p>
+        </section>
+
+        <section id="section3.1">
+          <h3>Approach</h3>
+          <h4>Step 1: Computing the Average Shape</h4>
+          <p>
+            The average shape is calculated by taking the element-wise mean of
+            the keypoints from both images:
+            <code>avg_points = (points_a + points_b) / 2</code>. I thereafter
+            applied Delaunay triangulation using the average points to create
+            triangles for warping.
+          </p>
+
+          <h4>Step 2: Warping the Faces</h4>
+          <p>
+            For each triangle, we compute an affine transformation matrix
+            between corresponding triangles in both faces and the average shape:
+            <code>A = compute_affine(tri_a, tri_avg)</code>. Using inverse
+            warping, we map the pixels from the source image triangles to the
+            average shape. This is applied to both images, creating warped
+            versions warped_a and warped_b.
+          </p>
+
+          <h4>Step 3: Averaging Colors</h4>
+          <p>
+            Finally, the mid-way face was computed by averaging the warped
+            images: <code>midway_face = (warped_a + warped_b) / 2</code>. This
+            produces a blended face that combines both images' geometry and
+            color.
+          </p>
+        </section>
+
+        <section id="section3.2">
+          <h3>Result</h3>
+          <figure>
+            <img
+              src="../web/img/midway-face.png"
+              alt="Midway face of face morphing"
+            />
+            <figcaption>Midway face of face morphing</figcaption>
+          </figure>
+        </section>
+
+        <section id="section4">
+          <h2>The Morph Sequence</h2>
+          <p></p>
+        </section>
+
+        <section id="section4.1">
+          <h3>Approach</h3>
+          <p>
+            The morphing process involves two main components: shape warping and
+            cross-dissolving. For each frame in the sequence, both images are
+            warped to an intermediate shape defined by a warp_frac parameter,
+            which linearly increases from 0 to 1 over the course of the video.
+            The warping is achieved by applying affine transformations to
+            corresponding triangles from the Delaunay triangulation of the
+            average shape. After warping, the color values of the warped images
+            are cross-dissolved using a weighted average based on dissolve_frac,
+            which also linearly increases from 0 to 1. The final frame is
+            produced by blending the morphed face with the background.
+          </p>
+        </section>
+
+        <section id="section4.2">
+          <h3>Result</h3>
+          <p></p>
+        </section>
+
+        <section id="section5">
+          <h2>The "Mean face" of a population</h2>
+          <p></p>
+        </section>
+
+        <section id="section5.1">
+          <h3>Approach</h3>
+          <p></p>
+        </section>
+
+        <section id="section5.2">
+          <h3>Result</h3>
           <p></p>
         </section>
 
