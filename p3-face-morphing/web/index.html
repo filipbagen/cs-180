@@ -39,6 +39,12 @@
           <li><a href="#section5">The "Mean face" of a population</a></li>
           <li><a href="#section5.1" class="sub">Approach</a></li>
           <li><a href="#section5.2" class="sub">Result</a></li>
+
+          <li>
+            <a href="#section6">Caricatures: Extrapolating from the mean</a>
+          </li>
+          <li><a href="#section6.1" class="sub">Approach</a></li>
+          <li><a href="#section6.2" class="sub">Result</a></li>
         </ul>
       </nav>
 
@@ -47,7 +53,12 @@
           <h1>Project 3 - Face Morphing</h1>
           <p>Filip Malm-Bägén</p>
           <hr />
-          <img id="hero" src="" alt="" />
+          <img
+            id="hero"
+            src="../code/morph_bounce.gif"
+            alt="Hero"
+            style="width: 380px"
+          />
           <h2>Introduction</h2>
           <p>
             This project goes though into the techniques of seamlessly
@@ -80,23 +91,23 @@
         <section id="section2.2">
           <h3>Result</h3>
 
-          <div style="display: flex; gap: 10px">
-            <figure>
-              <img
-                src="./img/face_a.png"
-                alt="Face A with correspondance points"
-              />
-              <figcaption>Face A with correspondance points</figcaption>
-            </figure>
+          <figure>
+            <img
+              src="./img/face_points.png"
+              alt="Face A and Face B with correspondance points"
+            />
+            <figcaption>
+              Face A and Face B with correspondance points
+            </figcaption>
+          </figure>
 
-            <figure>
-              <img
-                src="./img/face_b.png"
-                alt="Face B with correspondance points"
-              />
-              <figcaption>Face B with correspondance points</figcaption>
-            </figure>
-          </div>
+          <figure>
+            <img
+              src="./img/face_triangulation.png"
+              alt="Face A and Face B with triangualtion"
+            />
+            <figcaption>Face A and Face B with triangualtion</figcaption>
+          </figure>
 
           <figure>
             <img
@@ -144,13 +155,21 @@
             produces a blended face that combines both images' geometry and
             color.
           </p>
+
+          <p>
+            As seen in the result, there is a slight error in the mid-way face,
+            especially around the hair and shoulders. I think this might be due
+            to the points I selected not being perfectly positioned. If one
+            zooms in, there are artifacts around the face, and a horizontal line
+            across the nose.
+          </p>
         </section>
 
         <section id="section3.2">
           <h3>Result</h3>
           <figure>
             <img
-              src="../web/img/midway-face.png"
+              src="../web/img/midway_face.png"
               alt="Midway face of face morphing"
             />
             <figcaption>Midway face of face morphing</figcaption>
@@ -180,7 +199,13 @@
 
         <section id="section4.2">
           <h3>Result</h3>
-          <p></p>
+          <figure>
+            <img
+              src="../code/morph_bounce.gif?cache_bust=1"
+              alt="Morph Sequence Animation"
+            />
+            <figcaption>Morph Sequence Animation</figcaption>
+          </figure>
         </section>
 
         <section id="section5">
@@ -190,10 +215,54 @@
 
         <section id="section5.1">
           <h3>Approach</h3>
-          <p></p>
+          <p>
+            For this task i used the IMM Face Database. The code works by
+            loading the facial images and their landmark points into
+            <code>images</code> and <code>landmarks</code>, normalizing the
+            landmarks to the image dimensions. It computes the average shape
+            <code>average_shape</code>, then uses Delaunay triangulation and
+            affine transformations to morph each image towards this average.
+            Finally, it combines the morphed images to create and display an
+            average male face with a neutral expression.
+          </p>
         </section>
 
         <section id="section5.2">
+          <h3>Result</h3>
+          <figure>
+            <img
+              src="../web/img/mean_population.png"
+              alt="Mean face of a population"
+            />
+            <figcaption>Mean face of a population</figcaption>
+          </figure>
+
+          <p>
+            Here are a few examples of faces in the dataset warped to fit the
+            average face. The result looks somewhat good, but there are still
+            some artifacts around the eyes and mouth.
+          </p>
+
+          <figure>
+            <img
+              src="../web/img/faces_warped_avg_face.png"
+              alt="Faces warped to fit the average face"
+            />
+            <figcaption>Faces warped to fit the average face</figcaption>
+          </figure>
+        </section>
+
+        <section id="section6">
+          <h2>Part 5. Caricatures: Extrapolating from the mean</h2>
+          <p></p>
+        </section>
+
+        <section id="section6.1">
+          <h3>Approach</h3>
+          <p></p>
+        </section>
+
+        <section id="section6.2">
           <h3>Result</h3>
           <p></p>
         </section>
