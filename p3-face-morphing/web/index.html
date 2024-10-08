@@ -259,16 +259,29 @@
 
         <section id="section6.1">
           <h3>Approach</h3>
-          <p></p>
+          <p>
+            To create the caricature, I started by collecting and averaging the
+            landmarks of female happy faces using load_images_and_landmarks and
+            compute_average_shape. After normalizing these landmarks, I created
+            a caricature of my face by exaggerating the difference between my
+            landmarks and the average using the formula
+            <code>caricature = scale * me + (1 - scale) * avg</code>. Finally, I
+            warped my face to fit these caricatured landmarks with
+            morph_to_average_shape and displayed the result.
+          </p>
         </section>
 
         <section id="section6.2">
           <h3>Result</h3>
           <p></p>
+          <figure>
+            <img src="../web/img/caricatures.png" alt="Caricature of my face" />
+            <figcaption>Caricature of my face</figcaption>
+          </figure>
         </section>
 
         <section id="section7">
-          <h3>Bells and Whistles</h3>
+          <h2>Bells and Whistles</h2>
           <p>
             I created a morph-video-chain of my friends in Sweden. To to this, I
             used the
@@ -285,6 +298,15 @@
             morphs. The morphing is not very smooth, and the faces are not
             perfectly aligned. It would have been much better if I used better
             images, or aligned the faces better.
+          </p>
+
+          <p>
+            It is also clear on which images I've been sloppy with the
+            correspondance points. On these morphings, the faces are not
+            perfectly aligned, and the morphing is not smooth. I should have
+            placed a lot more points, especially around the contour of the face.
+            On some transitions, it just looks like the faces are sliding
+            around.
           </p>
 
           <img
