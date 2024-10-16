@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project 4 - Image Warping and Mosaicing</title>
+    <link rel="stylesheet" href="../../style.css" />
+    <script
+      src="https://kit.fontawesome.com/bde765b426.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="logo">CS-180</div>
+      <button class="toggle-mode">
+        <i class="fa-regular fa-sun fa-sm sun-icon"></i>
+        <i class="fa-regular fa-moon fa-sm moon-icon"></i>
+      </button>
+    </header>
+
+    <div class="container">
+      <nav class="sidebar">
+        <ul>
+          <li><a href="#section1">Introduction</a></li>
+
+          <li><a href="#section2">Shoot the Pictures</a></li>
+          <li><a href="#section2.1" class="sub">Approach</a></li>
+
+          <li><a href="#section3">Recover Homographies</a></li>
+          <li><a href="#section3.1" class="sub">Approach</a></li>
+
+          <li><a href="#section4">Warp the Images</a></li>
+          <li><a href="#section4.1" class="sub">Approach</a></li>
+          <li><a href="#section4.2" class="sub">Image Rectification</a></li>
+        </ul>
+      </nav>
+
+      <main class="content">
+        <section id="section1">
+          <h1>Project 4 - Image Warping and Mosaicing</h1>
+          <p>Filip Malm-Bägén</p>
+          <hr />
+          <img id="hero" src="./img/aliged_blended.png" alt="Hero" />
+          <h2>Introduction</h2>
+          <p>
+            This first part of the project goes through image warping and
+            mosaicing. The goal is to create a panorama image from multiple
+            images.
+          </p>
+        </section>
+
+        <section id="section2">
+          <h2>Shoot the Pictures</h2>
+        </section>
+
+        <section id="section2.1">
+          <h3>Approach</h3>
+          <p>
+            I took a lot of different pictures. The important things which I had
+            in mind were that I must rotate the camera strictly around the
+            optical center of the camera. In the beginning, I was careless about
+            this, which resulted in a lot of problems. I also made sure to
+            photograph scenes far away from the camera. This is important
+            because the parallax effect is less significant when the objects are
+            far away from the camera. I also made sure to have a lot of overlap
+            between the images. This is important because the more overlap there
+            is, the more information there is to stitch the images together.
+          </p>
+        </section>
+
+        <section id="section3">
+          <h2>Recover Homographies</h2>
+          <p></p>
+        </section>
+
+        <section id="section3.1">
+          <h3>Approach</h3>
+          <p>
+            I got the correspondig points using the same
+            <a
+              href="https://inst.eecs.berkeley.edu/~cs194-26/fa22/upload/files/proj3/cs194-26-aex/tool.html"
+              >tool</a
+            >
+            as used in
+            <a
+              href="https://filipbagen.github.io/cs-180/p3-face-morphing/web/index.html"
+              >project 3</a
+            >
+            to label the points of the two images. After getting the
+            correspondig points, I used SVD to get the homography matrix. Once I
+            had the points, I set up a system of linear equations. For each pair
+            of corresponding points, I derived two equations, resulting in a
+            system with as many equations as twice the number of points. To
+            solve for the homography matrix, I used Singular Value Decomposition
+            (SVD). This method allowed me to solve the system in a least-squares
+            manner, which is more stable when dealing with more than the minimum
+            four points. The final step involved reshaping the solution into a
+            3x3 matrix and normalizing it so that the lower-right corner was 1.
+            This homography matrix is what I used to warp one image onto the
+            other, aligning them for blending.
+          </p>
+        </section>
+
+        <section id="section4">
+          <h2>Warp the Images</h2>
+          <p></p>
+        </section>
+
+        <section id="section4.1">
+          <h3>Approach</h3>
+          <p>
+            To warp the image using the homography matrix, I transformed the
+            corners of the original image represented as homogeneous coordinates
+            by multiplying them with the homography matrix <code>H</code>. After
+            normalizing the resulting coordinates, I determined the new bounds
+            for the warped image. Next, I created a meshgrid for the output
+            image's coordinates and mapped them back to the input image using
+            the inverse homography matrix, <code>H_inv</code>. This reverse
+            mapping allowed me to retrieve pixel values from the original image.
+            For each channel, I employed the <code>griddata</code> function for
+            linear interpolation, filling in pixel values smoothly across the
+            warped image. Finally, the function returned the warped image,
+            facilitating accurate alignment in subsequent steps, such as image
+            stitching or blending.
+          </p>
+        </section>
+
+        <section id="section4.2">
+          <h3>Image Rectification</h3>
+          <figure>
+            <img src="./img/warped_screen.png" alt="Warped image of a screen" />
+            <figcaption>
+              Warped image of a screen using the homography matrix
+            </figcaption>
+          </figure>
+        </section>
+
+        <section id="section5">
+          <h2>Blend the images into a mosaic</h2>
+          <p></p>
+        </section>
+
+        <section id="section5.1">
+          <h3>Approach</h3>
+          <p>
+            I began by loading two new images,
+            <code>panorama_left</code> and <code>panorama_right</code>, along
+            with their corresponding points from a JSON file. I visualized these
+            images alongside the marked points for reference. Using the function
+            <code>computeH</code>, I calculated the homography matrix
+            <code>H2</code> to warp the left image into the perspective of the
+            right image. The warped points of the left image were computed using
+            the <code>warpPoints</code> function, which adjusted their
+            coordinates based on the new position on the warped image. Next, I
+            created a blending mask to seamlessly merge the two images. This
+            involved calculating the distance transform of both images and
+            generating an alpha mask to facilitate blending. I also implemented
+            the <code>align_and_blend_images_custom</code> function, which
+            calculated the necessary transformations to align and blend the
+            warped left image with the right image accurately. Finally, the
+            resultant aligned and blended image was displayed, showcasing the
+            effectiveness of the mosaicing process.
+          </p>
+        </section>
+
+        <section id="section6">
+          <h2>Results</h2>
+            <figure>
+            <img src="./img/corr_points.png" alt="Corresponding points on images" />
+            <figcaption>Corresponding points on images</figcaption>
+            </figure>
+
+            <figure>
+            <img src="./img/warped_points.png" alt="Warped points after applying homography" />
+            <figcaption>Warped points after applying homography</figcaption>
+            </figure>
+
+            <figure>
+            <img src="./img/mask.png" alt="Blending mask for image stitching" />
+            <figcaption>Blending mask for image stitching</figcaption>
+            </figure>
+
+            <figure>
+            <img src="./img/panorama.png" alt="Final panorama image" />
+            <figcaption>Final panorama image</figcaption>
+            </figure>
+        </section>
+
+        <p>
+          <i>This webpage design was partly made using generative AI models.</i>
+        </p>
+      </main>
+    </div>
+
+    <script>
+      const toggleButton = document.querySelector('.toggle-mode');
+      const body = document.body;
+
+      // Function to set the appropriate icon based on the mode
+      function updateIcons() {
+        if (body.classList.contains('dark-mode')) {
+          document.querySelector('.sun-icon').style.display = 'none';
+          document.querySelector('.moon-icon').style.display = 'inline-block';
+        } else {
+          document.querySelector('.sun-icon').style.display = 'inline-block';
+          document.querySelector('.moon-icon').style.display = 'none';
+        }
+      }
+
+      // Check if dark mode is enabled in localStorage when page loads
+      if (localStorage.getItem('dark-mode') === 'enabled') {
+        body.classList.add('dark-mode');
+        updateIcons();
+      } else {
+        updateIcons(); // Ensure the icons are set correctly for light mode
+      }
+
+      // Toggle between light and dark mode on button click
+      toggleButton.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+
+        // Save the dark mode state to localStorage
+        if (body.classList.contains('dark-mode')) {
+          localStorage.setItem('dark-mode', 'enabled');
+        } else {
+          localStorage.removeItem('dark-mode');
+        }
+
+        // Update the icons when the mode is toggled
+        updateIcons();
+      });
+    </script>
+  </body>
+</html>
