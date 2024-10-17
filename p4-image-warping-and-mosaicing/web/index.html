@@ -33,6 +33,10 @@
           <li><a href="#section4">Warp the Images</a></li>
           <li><a href="#section4.1" class="sub">Approach</a></li>
           <li><a href="#section4.2" class="sub">Image Rectification</a></li>
+
+          <li><a href="#section5">Blend the images into a mosaic</a></li>
+          <li><a href="#section5.1" class="sub">Approach</a></li>
+          <li><a href="#section5.2" class="sub">Result</a></li>
         </ul>
       </nav>
 
@@ -134,6 +138,13 @@
               Warped image of a screen using the homography matrix
             </figcaption>
           </figure>
+
+          <figure>
+            <img src="./img/warped_ipad.png" alt="Warped image of an iPad" />
+            <figcaption>
+              Warped image of an iPad using the homography matrix
+            </figcaption>
+          </figure>
         </section>
 
         <section id="section5">
@@ -164,27 +175,60 @@
           </p>
         </section>
 
-        <section id="section6">
+        <section id="section5.2">
           <h2>Results</h2>
-            <figure>
-            <img src="./img/corr_points.png" alt="Corresponding points on images" />
+          <figure>
+            <img
+              src="./img/corr_points.png"
+              alt="Corresponding points on images"
+            />
             <figcaption>Corresponding points on images</figcaption>
-            </figure>
+          </figure>
 
-            <figure>
-            <img src="./img/warped_points.png" alt="Warped points after applying homography" />
+          <figure>
+            <img
+              src="./img/warped_points.png"
+              alt="Warped points after applying homography"
+            />
             <figcaption>Warped points after applying homography</figcaption>
-            </figure>
+          </figure>
 
-            <figure>
+          <figure>
             <img src="./img/mask.png" alt="Blending mask for image stitching" />
-            <figcaption>Blending mask for image stitching</figcaption>
-            </figure>
+            <figcaption>Blending mask for the final panorama image</figcaption>
+          </figure>
 
-            <figure>
+          <figure>
             <img src="./img/panorama.png" alt="Final panorama image" />
             <figcaption>Final panorama image</figcaption>
-            </figure>
+          </figure>
+
+          <figure>
+            <img
+              src="./img/panorama_home.png"
+              alt="Panorama image from outside my home"
+            />
+            <figcaption>Panorama image from outside my home</figcaption>
+          </figure>
+
+          <p>
+            Finally, I wanted to test the limits of the algorithm and took two
+            images over Moffitt Library with a thin overlap (not even 40%, which
+            was the recomended minimum). The result was not perfect, but it was
+            still quite impressive. The algorithm managed to stitch the images
+            together, but the seam is very blurry and not very well aligned.
+            This can also be due to careless photography, or careless placement
+            of the corresponding points. The result is still quite impressive,
+            considering the lack of overlap.
+          </p>
+
+          <figure>
+            <img
+              src="./img/panorama_moffitt.png"
+              alt="Panorama image from Moffitt Library"
+            />
+            <figcaption>Panorama image from Moffitt Library</figcaption>
+          </figure>
         </section>
 
         <p>
