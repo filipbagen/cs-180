@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Project 4 - Image Warping and Mosaicing</title>
+    <title>Project 4 - (Auto)Stitching Photo Mosaics</title>
     <link rel="stylesheet" href="../../style.css" />
     <script
       src="https://kit.fontawesome.com/bde765b426.js"
@@ -22,31 +22,59 @@
     <div class="container">
       <nav class="sidebar">
         <ul>
-          <li><a href="#section1">Introduction</a></li>
+          <li><a href="#section1">Part A - Introduction</a></li>
 
-          <li><a href="#section2">Shoot the Pictures</a></li>
+          <li><a href="#section2">Part A - Shoot the Pictures</a></li>
           <li><a href="#section2.1" class="sub">Approach</a></li>
 
-          <li><a href="#section3">Recover Homographies</a></li>
+          <li><a href="#section3">Part A - Recover Homographies</a></li>
           <li><a href="#section3.1" class="sub">Approach</a></li>
 
-          <li><a href="#section4">Warp the Images</a></li>
+          <li><a href="#section4">Part A - Warp the Images</a></li>
           <li><a href="#section4.1" class="sub">Approach</a></li>
           <li><a href="#section4.2" class="sub">Image Rectification</a></li>
 
-          <li><a href="#section5">Blend the images into a mosaic</a></li>
+          <li>
+            <a href="#section5">Part A - Blend the images into a mosaic</a>
+          </li>
           <li><a href="#section5.1" class="sub">Approach</a></li>
           <li><a href="#section5.2" class="sub">Result</a></li>
+
+          <li><a href="#section6">Part B - Introduction</a></li>
+
+          <li><a href="#section7">Part B - Interest Point Detector</a></li>
+          <li><a href="#section7.1" class="sub">Approach</a></li>
+          <li><a href="#section7.2" class="sub">Result</a></li>
+
+          <li>
+            <a href="#section8">Part B - Adaptive Non-Maximal Suppression</a>
+          </li>
+          <li><a href="#section8.1" class="sub">Approach</a></li>
+          <li><a href="#section8.2" class="sub">Result</a></li>
+
+          <li>
+            <a href="#section9">Part B - Feature Descriptor Extraction</a>
+          </li>
+          <li><a href="#section9.1" class="sub">Approach</a></li>
+          <li><a href="#section9.2" class="sub">Result</a></li>
+
+          <li><a href="#section10">Part B - Feature Matching</a></li>
+          <li><a href="#section10.1" class="sub">Approach</a></li>
+          <li><a href="#section10.2" class="sub">Result</a></li>
+
+          <li><a href="#section11">Part B - 4-Point RANSAC</a></li>
+          <li><a href="#section11.1" class="sub">Approach</a></li>
+          <li><a href="#section11.2" class="sub">Result</a></li>
         </ul>
       </nav>
 
       <main class="content">
         <section id="section1">
-          <h1>Project 4 - Image Warping and Mosaicing</h1>
+          <h1>Project 4 - (Auto)Stitching Photo Mosaics</h1>
           <p>Filip Malm-Bägén</p>
           <hr />
           <img id="hero" src="./img/aliged_blended.png" alt="Hero" />
-          <h2>Introduction</h2>
+          <h2>Part A - Introduction</h2>
           <p>
             This first part of the project goes through image warping and
             mosaicing. The goal is to create a panorama image from multiple
@@ -229,6 +257,91 @@
             />
             <figcaption>Panorama image from Moffitt Library</figcaption>
           </figure>
+        </section>
+
+        <section id="section6">
+          <h2>Part B - Introduction</h2>
+          <p>
+            This second part of the project goes through the process of stiching
+            images together into mosaics using corresponding points. The points
+            are automaticaly identified, filtered and matched. The goal is to
+            automaticaly create a panorama image from multiple images.
+          </p>
+        </section>
+
+        <section id="section7">
+          <h2>Interest Point Detector</h2>
+          <p></p>
+        </section>
+
+        <section id="section7.1">
+          <h3>Approach</h3>
+          <p></p>
+        </section>
+
+        <section id="section7.2">
+          <h3>Result</h3>
+          <p></p>
+        </section>
+
+        <section id="section8">
+          <h2>Adaptive Non-Maximal Suppression</h2>
+          <p></p>
+        </section>
+
+        <section id="section8.1">
+          <h3>Approach</h3>
+          <p></p>
+        </section>
+
+        <section id="section8.2">
+          <h3>Result</h3>
+          <p></p>
+        </section>
+
+        <section id="section9">
+          <h2>Feature Descriptor Extraction</h2>
+          <p></p>
+        </section>
+
+        <section id="section9.1">
+          <h3>Approach</h3>
+          <p></p>
+        </section>
+
+        <section id="section9.2">
+          <h3>Result</h3>
+          <p></p>
+        </section>
+
+        <section id="section10">
+          <h2>Feature Matching</h2>
+          <p></p>
+        </section>
+
+        <section id="section10.1">
+          <h3>Approach</h3>
+          <p></p>
+        </section>
+
+        <section id="section10.2">
+          <h3>Result</h3>
+          <p></p>
+        </section>
+
+        <section id="section10">
+          <h2>4-Point RANSAC</h2>
+          <p></p>
+        </section>
+
+        <section id="section11.1">
+          <h3>Approach</h3>
+          <p></p>
+        </section>
+
+        <section id="section11.2">
+          <h3>Result</h3>
+          <p></p>
         </section>
 
         <p>
