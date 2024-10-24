@@ -282,7 +282,15 @@
 
         <section id="section7.1">
           <h3>Approach</h3>
-          <p></p>
+          <p>
+            In the first step, I used the Harris corner detection algorithm to
+            identify interest points. The images were converted to grayscale,
+            and corners were detected using <code>get_harris_corners()</code>.
+            The function returned the corner strength map <code>h</code> and
+            corner coordinates, which were then plotted on the grayscale images.
+            The detected corners were visualized as blue points, showing the key
+            points of interest for further image stitching.
+          </p>
         </section>
 
         <section id="section7.2">
@@ -305,7 +313,15 @@
 
         <section id="section8.1">
           <h3>Approach</h3>
-          <p></p>
+          <p>
+            Next, I implemented Adaptive Non-Maximal Suppression (ANMS) to
+            select the strongest and most spatially distributed corners. The
+            Harris scores were used to compare corners, and pairwise distances
+            were computed with <code>dist2()</code>. Based on these distances
+            and corner strengths, a suppression process determined the minimum
+            radius for each point. The top corners were then selected and
+            visualized as red points on the images.
+          </p>
         </section>
 
         <section id="section8.2">
@@ -328,7 +344,18 @@
 
         <section id="section9.1">
           <h3>Approach</h3>
-          <p></p>
+          <p>
+            For each corner detected through ANMS, I extracted feature
+            descriptors by sampling an axis-aligned 8x8 patch from a larger
+            40x40 window around each point. The larger window was first blurred
+            using a Gaussian filter to ensure smoothness and reduce aliasing.
+            Each patch was sampled with a spacing of 5 pixels and
+            bias/gain-normalized by subtracting the mean and dividing by the
+            standard deviation of the pixel values. Descriptors for each corner
+            were created by concatenating the normalized patches from all three
+            color channels into a single vector, forming a feature descriptor
+            for each point.
+          </p>
         </section>
 
         <section id="section9.2">
@@ -348,7 +375,20 @@
 
         <section id="section10.1">
           <h3>Approach</h3>
-          <p></p>
+          <p>
+            To match feature descriptors between the two images, I implemented a
+            feature matching algorithm based on Lowe's ratio test. For each
+            feature in the first image, I calculated the distances to all
+            feature descriptors in the second image using Euclidean distance.
+            The two nearest neighbors were identified, and Lowe's ratio test was
+            applied to ensure that the nearest neighbor is sufficiently better
+            than the second. If the distance to the nearest neighbor was less
+            than a specified threshold times the distance to the second, the
+            match was retained. This process ensured robust feature matching and
+            prevented incorrect matches due to ambiguous descriptors. One-to-one
+            matching was enforced by keeping track of already matched points in
+            the second image.
+          </p>
         </section>
 
         <section id="section10.2">
