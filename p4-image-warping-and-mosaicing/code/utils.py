@@ -158,7 +158,7 @@ def apply_affine_transform(image: np.ndarray, transformation_matrix: np.ndarray,
     return output_image
 
 
-def align_and_blend_images_custom(im1: np.ndarray, im2: np.ndarray, warped_points: np.ndarray, target_points: np.ndarray) -> np.ndarray:
+def align_and_blend_images(im1: np.ndarray, im2: np.ndarray, warped_points: np.ndarray, target_points: np.ndarray, visualise_mask: bool = False) -> np.ndarray:
     # Compute the rotation angle
     angle_warped = np.arctan2(warped_points[1, 1] - warped_points[0, 1],
                               warped_points[1, 0] - warped_points[0, 0])
@@ -229,12 +229,13 @@ def align_and_blend_images_custom(im1: np.ndarray, im2: np.ndarray, warped_point
     # Create the blending mask using the aligned images
     alpha_mask = create_blending_mask(aligned_image_centered, result_image)
 
-    # Visualize the alpha mask
-    plt.figure(figsize=(10, 7))
-    plt.imshow(alpha_mask, cmap='gray')
-    plt.title('Alpha Mask')
-    plt.axis('off')
-    plt.show()
+    if visualise_mask:
+        # Visualize the alpha mask
+        fig, ax = plt.subplots(figsize=(10, 7))
+        ax.imshow(alpha_mask, cmap='gray')
+        ax.set_title('Alpha Mask')
+        ax.axis('off')
+        plt.show()
 
     # Blend the images using the generated alpha mask
     blended_image = blend_images(
