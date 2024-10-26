@@ -198,10 +198,10 @@
             created a blending mask to seamlessly merge the two images. This
             involved calculating the distance transform of both images and
             generating an alpha mask to facilitate blending. I also implemented
-            the <code>align_and_blend_images_custom</code> function, which
-            calculated the necessary transformations to align and blend the
-            warped left image with the right image accurately. Finally, the
-            resultant aligned and blended image was displayed, showcasing the
+            the <code>align_and_blend_images</code> function, which calculated
+            the necessary transformations to align and blend the warped left
+            image with the right image accurately. Finally, the resultant
+            aligned and blended image was displayed, showcasing the
             effectiveness of the mosaicing process.
           </p>
         </section>
@@ -401,19 +401,77 @@
           </figure>
         </section>
 
-        <section id="section10">
+        <section id="section11">
           <h2>4-Point RANSAC</h2>
           <p></p>
         </section>
 
         <section id="section11.1">
           <h3>Approach</h3>
-          <p></p>
+          <p>
+            Finally, I implemented the RANSAC algorithm to find the best
+            homography matrix for aligning two sets of points. Given sets of
+            corresponding coordinates, <code>coords_1</code> and
+            <code>coords_2</code>, and a list of matched pairs
+            <code>matches</code>, the function <code>ransac</code> iterates a
+            specified number of times to find the optimal set of inliers. In
+            each iteration, four random points from each set are sampled to
+            compute a homography matrix <code>H_temp</code> using
+            <code>computeH</code>. This homography is then applied to all points
+            in <code>pts1</code> using the
+            <code>warp_points_ransac</code> function, which converts points into
+            homogeneous coordinates, applies the transformation matrix, and
+            scales the result to get the transformed points. The transformed
+            points are compared to their target points from <code>pts2</code> by
+            calculating the Euclidean distance, with any points within the
+            <code>threshold</code> distance considered inliers. If the count of
+            inliers exceeds the current maximum, the inlier set is updated to
+            <code>best_inliers</code>. After iterating, a final homography
+            matrix <code>final_H</code> is calculated using all the points in
+            <code>best_inliers</code>, representing the best transformation for
+            the image alignment.
+          </p>
+
+          <p>
+            After implementing the RANSAC algorithm, I warped the image and
+            blended the images into mosaic using the same code as in part A. The
+            result was a a panorama image from multiple images, similar to the
+            result from part A, but without any manual work. The result is quite
+            impresive, and the coolest thing I learned in this project was how
+            efficient the algorithm is, and that I now know how to stitch
+            images.
+          </p>
         </section>
 
         <section id="section11.2">
           <h3>Result</h3>
-          <p></p>
+          <p>
+            Interestringly, the image used on previous exercise to test the
+            limit of my algorithm now works great. Even though the overlap is
+            less than 40%, my new implementation perfectly aligns the images,
+            and gives no blurry edges (which the previous image had).
+          </p>
+
+          <figure>
+            <img src="./img/4b/ransac.png" alt="RANSAC Result" />
+            <figcaption>RANSAC Result</figcaption>
+          </figure>
+
+          <figure>
+            <img
+              src="./img/4b/panorama_home.png"
+              alt="Panorama image from outside my home"
+            />
+            <figcaption>Panorama image from outside my home</figcaption>
+          </figure>
+
+          <figure>
+            <img
+              src="./img/4b/panorama_moffitt.png"
+              alt="Panorama image from Moffitt Library"
+            />
+            <figcaption>Panorama image from Moffitt Library</figcaption>
+          </figure>
         </section>
 
         <p>
