@@ -6,7 +6,7 @@ from scipy.ndimage import distance_transform_edt
 from skimage.feature import corner_harris, peak_local_max
 
 
-def computeH(im1_pts: np.ndarray, im2_pts: np.ndarray) -> np.ndarray:
+def compute_H(im1_pts: np.ndarray, im2_pts: np.ndarray) -> np.ndarray:
     num_pts: int = im1_pts.shape[0]
 
     A: list = []
@@ -25,7 +25,7 @@ def computeH(im1_pts: np.ndarray, im2_pts: np.ndarray) -> np.ndarray:
     return H / H[-1, -1]  # Normalize so H[2,2] is 1
 
 
-def warpImage(im: np.ndarray, H: np.ndarray) -> Tuple[np.ndarray, int, int]:
+def warp_image(im: np.ndarray, H: np.ndarray) -> Tuple[np.ndarray, int, int]:
     height, width = im.shape[:2]
 
     # Define corners of the original image in homogeneous coordinates
@@ -78,7 +78,7 @@ def warpImage(im: np.ndarray, H: np.ndarray) -> Tuple[np.ndarray, int, int]:
     return warped_im, min_x, min_y
 
 
-def warpPoints(points: np.ndarray, H: np.ndarray, min_x: int, min_y: int) -> np.ndarray:
+def warp_points(points: np.ndarray, H: np.ndarray, min_x: int, min_y: int) -> np.ndarray:
     num_points = points.shape[0]
     homogeneous_points = np.hstack([points, np.ones((num_points, 1))])
 
