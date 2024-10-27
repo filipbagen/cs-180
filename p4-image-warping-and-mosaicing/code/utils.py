@@ -1,12 +1,25 @@
 import scipy as sp
 import numpy as np
-from typing import Tuple
+from typing import List, Tuple
 import matplotlib.pyplot as plt
+from scipy.ndimage import gaussian_filter
 from scipy.ndimage import distance_transform_edt
 from skimage.feature import corner_harris, peak_local_max
 
 
 def compute_H(im1_pts: np.ndarray, im2_pts: np.ndarray) -> np.ndarray:
+    """
+    This function computes the homography matrix H that maps points from
+    im1_pts to im2_pts. 
+
+    Parameters:
+    - im1_pts: A numpy array of shape (N, 2) containing N points from the first image.
+    - im2_pts: A numpy array of shape (N, 2) containing N points from the second image.
+
+    Returns:
+    - H: A 3x3 numpy array representing the homography matrix.
+    """
+
     num_pts: int = im1_pts.shape[0]
 
     A: list = []
@@ -26,6 +39,19 @@ def compute_H(im1_pts: np.ndarray, im2_pts: np.ndarray) -> np.ndarray:
 
 
 def warp_image(im: np.ndarray, H: np.ndarray) -> Tuple[np.ndarray, int, int]:
+    """
+    This function warps the input image im using the homography matrix H.
+
+    Parameters:
+    - im: The input image to be warped, given as a numpy array.
+    - H: The homography matrix used to warp the image.
+
+    Returns:
+    - warped_im: The warped image.
+    - min_x: The minimum x-coordinate of the warped image bounding box.
+    - min_y: The minimum y-coordinate of the warped image bounding box.
+    """
+
     height, width = im.shape[:2]
 
     # Define corners of the original image in homogeneous coordinates
@@ -79,6 +105,19 @@ def warp_image(im: np.ndarray, H: np.ndarray) -> Tuple[np.ndarray, int, int]:
 
 
 def warp_points(points: np.ndarray, H: np.ndarray, min_x: int, min_y: int) -> np.ndarray:
+    """
+    This function warps the input points using the homography matrix H.
+
+    Parameters:
+    - points: The input points to be warped, given as an Nx2 numpy array.
+    - H: The homography matrix used to warp the points.
+    - min_x: The minimum x-coordinate of the warped image bounding box.
+    - min_y: The minimum y-coordinate of the warped image bounding box.
+
+    Returns:
+    - warped_points: The warped points, adjusted by the minimum x and y coordinates.
+    """
+
     num_points = points.shape[0]
     homogeneous_points = np.hstack([points, np.ones((num_points, 1))])
 
@@ -91,12 +130,23 @@ def warp_points(points: np.ndarray, H: np.ndarray, min_x: int, min_y: int) -> np
     return warped_points[:2, :].T
 
 
-def create_blending_mask(warped_left: np.ndarray, panorama_right: np.ndarray) -> np.ndarray:
+def create_blending_mask(warped_left: np.ndarray, image_right: np.ndarray) -> np.ndarray:
+    """
+    This function creates a blending mask for the two images to be blended.
+
+    Parameters:
+    - warped_left: The warped left image.
+    - image_right: The right image to be blended with the warped left image.
+
+    Returns:
+    - alpha_mask: The alpha mask used for blending the two images.
+    """
+
     mask_left = np.zeros(warped_left.shape[:2], dtype=np.uint8)
-    mask_right = np.zeros(panorama_right.shape[:2], dtype=np.uint8)
+    mask_right = np.zeros(image_right.shape[:2], dtype=np.uint8)
 
     mask_left[np.sum(warped_left, axis=2) > 0] = 1
-    mask_right[np.sum(panorama_right, axis=2) > 0] = 1
+    mask_right[np.sum(image_right, axis=2) > 0] = 1
 
     # Compute the distance transform
     dtrans_left = distance_transform_edt(mask_left)
@@ -111,17 +161,41 @@ def create_blending_mask(warped_left: np.ndarray, panorama_right: np.ndarray) ->
     return alpha_mask
 
 
-def blend_images(warped_left: np.ndarray, panorama_right: np.ndarray, alpha_mask: np.ndarray) -> np.ndarray:
+def blend_images(warped_left: np.ndarray, image_right: np.ndarray, alpha_mask: np.ndarray) -> np.ndarray:
+    """
+    This function blends the two images using the alpha mask.
+
+    Parameters:
+    - warped_left: The warped left image.
+    - image_right: The right image to be blended with the warped left image.
+    - alpha_mask: The alpha mask used for blending the two images.
+
+    Returns:
+    - blended_image: The resulting blended image.
+    """
+
     alpha_mask = np.repeat(alpha_mask[:, :, np.newaxis], 3, axis=2)
 
     blended_image = warped_left * alpha_mask + \
-        panorama_right * (1 - alpha_mask)
+        image_right * (1 - alpha_mask)
     blended_image = blended_image.astype(np.uint8)
 
     return blended_image
 
 
 def apply_affine_transform(image: np.ndarray, transformation_matrix: np.ndarray, output_shape: Tuple[int, int]) -> np.ndarray:
+    """
+    This function applies an affine transformation to an input image.
+
+    Parameters:
+    - image: The input image to be transformed.
+    - transformation_matrix: The 2x3 affine transformation matrix.
+    - output_shape: The shape of the output image.
+
+    Returns:
+    - output_image: The transformed image.
+    """
+
     output_image = np.zeros(
         (output_shape[0], output_shape[1], image.shape[2]), dtype=image.dtype)
     inverse_transform = np.linalg.inv(
@@ -160,6 +234,20 @@ def apply_affine_transform(image: np.ndarray, transformation_matrix: np.ndarray,
 
 
 def align_and_blend_images(im1: np.ndarray, im2: np.ndarray, warped_points: np.ndarray, target_points: np.ndarray, visualise_mask: bool = False) -> np.ndarray:
+    """
+    This function aligns and blends two images using the provided points.
+
+    Parameters:
+    - im1: The first input image.
+    - im2: The second input image.
+    - warped_points: The points from the first image to be warped.
+    - target_points: The target points to which the warped points should be aligned.
+    - visualise_mask: A boolean flag to visualize the alpha mask.
+
+    Returns:
+    - blended_image: The resulting blended image.
+    """
+
     # Compute the rotation angle
     angle_warped = np.arctan2(warped_points[1, 1] - warped_points[0, 1],
                               warped_points[1, 0] - warped_points[0, 0])
@@ -245,7 +333,7 @@ def align_and_blend_images(im1: np.ndarray, im2: np.ndarray, warped_points: np.n
     return blended_image
 
 
-def get_harris_corners(im, edge_discard=20):
+def get_harris_corners(im: np.ndarray, edge_discard: int = 20) -> Tuple[np.ndarray, np.ndarray]:
     """
     This function takes a b&w image and an optional amount to discard
     on the edge (default is 5 pixels), and finds all harris corners
@@ -273,7 +361,7 @@ def get_harris_corners(im, edge_discard=20):
     return h, coords
 
 
-def dist2(x, c):
+def dist2(x: np.ndarray, c: np.ndarray) -> np.ndarray:
     """
     dist2 Calculates squared distance between two sets of points.
 
@@ -295,3 +383,279 @@ def dist2(x, c):
     return (np.ones((ncenters, 1)) * np.sum((x**2).T, axis=0)).T + \
         np.ones((ndata, 1)) * np.sum((c**2).T, axis=0) - \
         2 * np.inner(x, c)
+
+
+def adaptive_non_maximal_suppression(corners: np.ndarray, h: np.ndarray, num_points: int = 500, c_robust: float = 0.9) -> np.ndarray:
+    """
+    This function performs adaptive non-maximal suppression on the Harris corner points.
+
+    Parameters:
+    - corners: The corner points to be suppressed.
+    - h: The Harris corner strength values.
+    - num_points: The number of points to be selected.
+    - c_robust: The robustness constant for the adaptive non-maximal suppression.
+
+    Returns:
+    - sorted_corners: The sorted corner points after adaptive non-maximal suppression.
+    """
+
+    # Extract Harris strengths for each corner point
+    scores = h[corners[0], corners[1]]
+
+    # Calculate pairwise distances between all corners using dist2()
+    dists = dist2(corners.T, corners.T)  # corners.T is of shape (n, 2)
+
+    # Broadcast comparison: f(x_i) < c_robust * f(x_j)
+    larger_mask = scores[:, np.newaxis] < (c_robust * scores[np.newaxis, :])
+
+    # Mask the distances where the comparison holds and set the rest to infinity
+    masked_dists = np.where(larger_mask, dists, np.inf)
+
+    # Calculate the minimum radius for each point
+    radii = np.min(masked_dists, axis=1)
+
+    # Sort points by their radii in descending order
+    sorted_indices = np.argsort(-radii)
+
+    # Sort the original corners based on radii
+    sorted_corners = corners[:, sorted_indices]
+
+    return sorted_corners[:, :num_points]
+
+
+def extract_feature_descriptors(im: np.ndarray, coords: np.ndarray, patch_size: int = 8, window_size: int = 40, spacing: int = 5) -> np.ndarray:
+    """
+    This function extracts feature descriptors from the input image around the specified coordinates.
+
+    Parameters:
+    - im: The input image from which to extract descriptors.
+    - coords: The coordinates around which to extract descriptors.
+    - patch_size: The size of the patch to be extracted.
+    - window_size: The size of the window around the point to be considered.
+    - spacing: The spacing between pixels in the window.
+
+    Returns:
+    - descriptors: The extracted feature descriptors.
+    """
+
+    # Calculate half the window size for boundary checks
+    half_window = window_size // 2
+
+    # Check if the point is within the valid bounds of the image
+    def is_within_bounds(y: int, x: int) -> bool:
+        """
+        This function checks if the point (y, x) is within the valid bounds of the image.
+
+        Parameters:
+        - y: The y-coordinate of the point.
+        - x: The x-coordinate of the point.
+
+        Returns:
+        - A boolean indicating whether the point is within the bounds of the image.
+        """
+
+        return (half_window <= y < im.shape[0] - half_window and
+                half_window <= x < im.shape[1] - half_window)
+
+    # Extract and normalize an 8x8 patch from a 40x40 window around the point (y, x) for a given channel
+    def extract_patch(y: int, x: int, channel: int) -> np.ndarray:
+        """
+        This function extracts and normalizes an 8x8 patch from a 40x40 window around the 
+        point (y, x) for a given channel.
+
+        Parameters:
+        - y: The y-coordinate of the point.
+        - x: The x-coordinate of the point.
+        - channel: The channel index for the image.
+
+        Returns:
+        - patch: The extracted and normalized 8x8 patch.
+        """
+
+        # Extract the 40x40 window for the current channel
+        window = im[y-half_window:y + half_window,
+                    x - half_window:x + half_window, channel]
+
+        # Apply Gaussian blur to reduce aliasing
+        window = gaussian_filter(window, sigma=1)
+
+        # Sample an 8x8 patch from the window with specified spacing
+        patch = window[::spacing, ::spacing][:patch_size, :patch_size]
+
+        # Normalize the patch (bias/gain normalization)
+        patch_mean = np.mean(patch)
+        patch_std = np.std(patch)
+
+        return (patch - patch_mean) / patch_std if patch_std > 0 else patch
+
+    # Generate descriptors for each point in coords
+    descriptors = [
+        # Concatenate descriptors from all three channels to form a single vector
+        np.concatenate([extract_patch(y, x, channel).flatten()
+                       for channel in range(3)])
+        for y, x in coords.T if is_within_bounds(y, x)
+    ]
+
+    return np.array(descriptors)
+
+
+def visualize_descriptors(descriptors: np.ndarray, num_descriptors: int = 5, patch_size: int = 8) -> None:
+    """
+    This function visualizes the extracted feature descriptors.
+
+    Parameters:
+    - descriptors: The extracted feature descriptors.
+    - num_descriptors: The number of descriptors to visualize.
+    - patch_size: The size of the patch to be visualized.
+
+    Returns:
+    - None
+    """
+
+    fig, axes = plt.subplots(1, num_descriptors, figsize=(15, 5))
+
+    for i, ax in enumerate(axes[:num_descriptors]):
+        descriptor = descriptors[i]
+
+        # Reshape the descriptor into three 8x8 patches for R, G, B channels
+        patches = [descriptor[j*patch_size*patch_size:(j+1)*patch_size*patch_size].reshape(
+            (patch_size, patch_size)) for j in range(3)]
+
+        # Combine the patches into a single 8x8x3 RGB image
+        patch_rgb = np.stack(patches, axis=-1)
+
+        # Normalize the RGB image to [0, 1] for visualization
+        patch_rgb = (patch_rgb - patch_rgb.min()) / \
+            (patch_rgb.max() - patch_rgb.min())
+
+        # Display the RGB image
+        ax.imshow(patch_rgb)
+        ax.axis('off')
+        ax.set_title(f'Descriptor {i+1}')
+
+    plt.show()
+
+
+def match_features(descriptors1: np.ndarray, descriptors2: np.ndarray, ratio_threshold: float = 0.8) -> List[Tuple[int, int]]:
+    """
+    This function matches feature descriptors between two images using the ratio test.
+
+    Parameters:
+    - descriptors1: The feature descriptors from the first image.
+    - descriptors2: The feature descriptors from the second image.
+    - ratio_threshold: The threshold for the Lowe's ratio test.
+
+    Returns:
+    - matches: A list of matched feature indices between the two images.
+    """
+
+    matches = []
+    matched_in_second_image = set()  # Track points already matched in the second image
+
+    for i, desc1 in enumerate(descriptors1):
+        # Calculate distances to all descriptors in the second image
+        distances = np.linalg.norm(descriptors2 - desc1, axis=1)
+
+        # Get the two nearest neighbors
+        nearest_neighbor_idx, second_nearest_neighbor_idx = np.argsort(distances)[
+            :2]
+
+        # Apply Lowe's ratio test
+        if distances[nearest_neighbor_idx] < ratio_threshold * distances[second_nearest_neighbor_idx]:
+            # Ensure one-to-one matching
+            if nearest_neighbor_idx not in matched_in_second_image:
+                matches.append((i, nearest_neighbor_idx))
+                matched_in_second_image.add(nearest_neighbor_idx)
+
+    return matches
+
+
+def warp_points_ransac(points: np.ndarray, H: np.ndarray) -> np.ndarray:
+    """
+    This function warps the input points using the homography matrix H.
+
+    Parameters:
+    - points: The input points to be warped, given as an Nx2 numpy array.
+    - H: The homography matrix used to warp the points.
+
+    Returns:
+    - warped_points: The warped points.
+    """
+
+    num_points = points.shape[0]
+    homogeneous_points = np.hstack([points, np.ones((num_points, 1))])
+    warped_points = H @ homogeneous_points.T
+    warped_points /= warped_points[2, :]
+
+    return warped_points[:2, :].T
+
+
+def ransac(coords_1: np.ndarray, coords_2: np.ndarray, matches: list, num_iterations: int = 1000, threshold: int = 1) -> Tuple[np.ndarray, List[int], np.ndarray, np.ndarray]:
+    """
+    This function performs RANSAC to estimate the homography matrix between two sets of points.
+
+    Parameters:
+    - coords_1: The coordinates of the first set of points.
+    - coords_2: The coordinates of the second set of points.
+    - matches: The matched indices between the two sets of points.
+    - num_iterations: The number of RANSAC iterations.
+    - threshold: The distance threshold for inliers.
+
+    Returns:
+    - final_H: The final homography matrix.
+    - best_inliers: The indices of the best set of inliers.
+    - final_pts1: The final set of points from the first image.
+    - final_pts2: The final set of points from the second image.
+    """
+
+    pts1 = []
+    pts2 = []
+
+    for idx, (i, j) in enumerate(matches):
+        y1, x1 = coords_1[:, i]
+        y2, x2 = coords_2[:, j]
+        pts1.append([x1, y1])
+        pts2.append([x2, y2])
+
+    pts1 = np.array(pts1)
+    pts2 = np.array(pts2)
+
+    max_inliers = 0
+    best_inliers = []
+
+    for _ in range(num_iterations):
+        # Randomly select 4 points
+        random_indices = np.random.choice(len(matches), 4, replace=False)
+
+        selected_pts1 = pts1[random_indices]
+        selected_pts2 = pts2[random_indices]
+
+        # Compute the homography using the selected points
+        H_temp = compute_H(selected_pts1, selected_pts2)
+
+        inliers = []
+        for idx in range(len(pts1)):
+            pt1 = pts1[idx]
+            pt2 = pts2[idx]
+
+            warped_pt1 = warp_points_ransac(np.array([pt1]), H_temp)[0]
+            dist = np.linalg.norm(warped_pt1 - pt2)
+
+            if dist < threshold:
+                inliers.append(idx)
+
+        # Update the best set of inliers
+        if len(inliers) > max_inliers:
+            max_inliers = len(inliers)
+            best_inliers = inliers
+
+    if max_inliers < 4:
+        raise ValueError("Not enough inliers to compute a homography.")
+
+    final_pts1 = pts1[best_inliers]
+    final_pts2 = pts2[best_inliers]
+
+    # Compute the final homography using all the inliers
+    final_H = compute_H(final_pts1, final_pts2)
+
+    return final_H, best_inliers, final_pts1, final_pts2
