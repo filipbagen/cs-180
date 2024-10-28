@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project 5 - Neural Radiance Field</title>
+    <link rel="stylesheet" href="../../style.css" />
+    <script
+      src="https://kit.fontawesome.com/bde765b426.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="logo">CS-180</div>
+      <button class="toggle-mode">
+        <i class="fa-regular fa-sun fa-sm sun-icon"></i>
+        <i class="fa-regular fa-moon fa-sm moon-icon"></i>
+      </button>
+    </header>
+
+    <div class="container">
+      <nav class="sidebar">
+        <ul>
+          <li><a href="#section1">Introduction</a></li>
+        </ul>
+      </nav>
+
+      <main class="content">
+        <section id="section1">
+          <h1>Project 5 - Neural Radiance Field</h1>
+          <p>Filip Malm-Bägén</p>
+          <hr />
+          <img id="hero" src="." alt="Hero" />
+          <h2></h2>
+          <p></p>
+        </section>
+
+        <p>
+          <i>This webpage design was partly made using generative AI models.</i>
+        </p>
+      </main>
+    </div>
+
+    <script>
+      const toggleButton = document.querySelector('.toggle-mode');
+      const body = document.body;
+
+      // Function to set the appropriate icon based on the mode
+      function updateIcons() {
+        if (body.classList.contains('dark-mode')) {
+          document.querySelector('.sun-icon').style.display = 'none';
+          document.querySelector('.moon-icon').style.display = 'inline-block';
+        } else {
+          document.querySelector('.sun-icon').style.display = 'inline-block';
+          document.querySelector('.moon-icon').style.display = 'none';
+        }
+      }
+
+      // Check if dark mode is enabled in localStorage when page loads
+      if (localStorage.getItem('dark-mode') === 'enabled') {
+        body.classList.add('dark-mode');
+        updateIcons();
+      } else {
+        updateIcons(); // Ensure the icons are set correctly for light mode
+      }
+
+      // Toggle between light and dark mode on button click
+      toggleButton.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+
+        // Save the dark mode state to localStorage
+        if (body.classList.contains('dark-mode')) {
+          localStorage.setItem('dark-mode', 'enabled');
+        } else {
+          localStorage.removeItem('dark-mode');
+        }
+
+        // Update the icons when the mode is toggled
+        updateIcons();
+      });
+    </script>
+  </body>
+</html>
