@@ -1,2 +1,0 @@
-https://filipbagen.github.io/cs-180/p5-neural-radiance-field/web/index.html
-https://github.com/filipbagen/cs-180
