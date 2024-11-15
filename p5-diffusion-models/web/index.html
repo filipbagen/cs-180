@@ -23,6 +23,14 @@
       <nav class="sidebar">
         <ul>
           <li><a href="#section1">Introduction</a></li>
+
+          <li><a href="#section2">Sampling Loops</a></li>
+          <li><a href="#section2.1" class="sub">Approach</a></li>
+          <li><a href="#section2.2" class="sub">Results</a></li>
+
+          <li><a href="#section3">Implementing the forward process</a></li>
+          <li><a href="#section3.1" class="sub">Approach</a></li>
+          <li><a href="#section3.2" class="sub">Results</a></li>
         </ul>
       </nav>
 
@@ -32,8 +40,133 @@
           <p>Filip Malm-Bägén</p>
           <hr />
           <img id="hero" src="." alt="Hero" />
-          <h2></h2>
+          <h2>Part A - Introduction</h2>
+          <p>
+            This first part of the project goes through image diffusion models
+            amd diffusion sampling loops. The goal is to get used to diffusion
+            models and use them for other tasks such as inpainting and creating
+            optical illusions.
+          </p>
+        </section>
+
+        <!-- Part 1 -->
+        <section id="section2">
+          <h2>Sampling Loops</h2>
           <p></p>
+
+          <section id="section2.1">
+            <h3>Approach</h3>
+            <p>
+              Starting from a clean image, noise was progressively added at each
+              timestep until reaching pure noise at T = 1000. Using the model, I
+              reversed this process by predicting and removing noise
+              step-by-step to reconstruct the original image. Noise levels were
+              controlled by DeepFloyd’s pre-set coefficients,
+              <code>alphas_cumprod</code>. The sample image was resized to 64
+              &times; 64, scaled to [-1, 1], and prepared as input for the
+              denoising process.
+            </p>
+          </section>
+
+          <section id="section2.2">
+            <h3>Results</h3>
+            <figure>
+              <img src="../img/A/1.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+          </section>
+        </section>
+
+        <!-- Section 1.1 -->
+        <section id="section3">
+          <h2>Implementing the forward process</h2>
+          <p></p>
+
+          <section id="section3.1">
+            <h3>Approach</h3>
+            <p>
+              I implemented the forward process to simulate noise addition to a
+              clean image at varying levels. Given a clean image
+              <code>x_0</code>, the forward process generates a noisy image
+              <code>x_t</code> at timestep <code>t</code> by sampling from a
+              Gaussian distribution with mean
+              <code>sqrt(alphas_cumprod[t]) * x_0</code> and variance
+              <code>(1 - alphas_cumprod[t])</code>. Using the function
+              <code>forward</code>, I applied this process to the test image for
+              noise levels <code>t = 250, 500,</code> and <code>750</code>,
+              resulting in progressively noisier images as expected.
+            </p>
+          </section>
+
+          <section id="section3.2">
+            <h3>Results</h3>
+            <figure>
+              <img src="../img/A/11.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+          </section>
+        </section>
+
+        <!-- Section 1.2 -->
+        <section id="section4">
+          <h2>Classical Denoising</h2>
+          <p></p>
+
+          <section id="section4.1">
+            <h3>Approach</h3>
+            <p>
+              In this section, I applied classical denoising techniques to the
+              noisy images from timesteps 250, 500, and 750 using
+              <code>Gaussian blur filtering</code>. Each noisy image was
+              processed with
+              <code>torchvision.transforms.functional.gaussian_blur</code> to
+              attempt noise reduction. The results were displayed side by side
+              to compare the effectiveness of Gaussian denoising on each image.
+              Achieving significant noise reduction proved challenging due to
+              the limitations of classical filtering methods with high-noise
+              images.
+            </p>
+          </section>
+
+          <section id="section4.2">
+            <h3>Results</h3>
+            <figure>
+              <img src="../img/A/12.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+          </section>
+        </section>
+
+        <!-- Section 1.3 -->
+        <section id="section5">
+          <h2>Implementing One Step Denoising</h2>
+          <p></p>
+
+          <section id="section5.1">
+            <h3>Approach</h3>
+            <p>
+              Here, I used a pretrained UNet, to perform one-step denoising on
+              noisy images. This UNet was trained on a vast dataset of image
+              pairs
+              <code>(x_0, x_t)</code> and can estimate the noise present in a
+              noisy image <code>x_t</code> when given a specific timestep
+              <code>t</code>. By estimating the noise, I was able to subtract it
+              (while applying the necessary scaling, as per equation 2) to
+              recover an approximation of the original image <code>x_0</code>.
+              This process was applied to images with noise levels
+              <code>t = [250, 500, 750]</code>, and the results were visualized
+              side-by-side, showing the original, noisy, and estimated denoised
+              images.
+            </p>
+          </section>
+
+          <section id="section5.2">
+            <h3>Results</h3>
+            <figure>
+              <img src="../img/A/13.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+          </section>
         </section>
 
         <p>
