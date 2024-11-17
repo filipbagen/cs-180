@@ -31,6 +31,48 @@
           <li><a href="#section3">Implementing the forward process</a></li>
           <li><a href="#section3.1" class="sub">Approach</a></li>
           <li><a href="#section3.2" class="sub">Results</a></li>
+
+          <li><a href="#section4">Classical Denoising</a></li>
+          <li><a href="#section4.1" class="sub">Approach</a></li>
+          <li><a href="#section4.2" class="sub">Results</a></li>
+
+          <li><a href="#section5">Implementing One Step Denoising</a></li>
+          <li><a href="#section5.1" class="sub">Approach</a></li>
+          <li><a href="#section5.2" class="sub">Results</a></li>
+
+          <li><a href="#section6">Implementing Iterative Denoising</a></li>
+          <li><a href="#section6.1" class="sub">Approach</a></li>
+          <li><a href="#section6.2" class="sub">Results</a></li>
+
+          <li><a href="#section7">Diffusion Model Sampling</a></li>
+          <li><a href="#section7.1" class="sub">Approach</a></li>
+          <li><a href="#section7.2" class="sub">Results</a></li>
+
+          <li><a href="#section8">Classifier Free Guidance</a></li>
+          <li><a href="#section8.1" class="sub">Approach</a></li>
+          <li><a href="#section8.2" class="sub">Results</a></li>
+
+          <li><a href="#section9">Image-to-image Translation</a></li>
+          <li><a href="#section9.1" class="sub">Approach</a></li>
+          <li><a href="#section9.2" class="sub">Results</a></li>
+
+          <li><a href="#section10">Image-to-image Translation</a></li>
+          <li><a href="#section10.1" class="sub">Approach</a></li>
+          <li><a href="#section10.2" class="sub">Results</a></li>
+
+          <li><a href="#section11">Inpainting</a></li>
+          <li><a href="#section11.1" class="sub">Approach</a></li>
+          <li><a href="#section11.2" class="sub">Results</a></li>
+
+          <li>
+            <a href="#section12">Text-Conditioned Image-to-image Translation</a>
+          </li>
+          <li><a href="#section12.1" class="sub">Approach</a></li>
+          <li><a href="#section12.2" class="sub">Results</a></li>
+
+          <li><a href="#section13">Visual Anagrams</a></li>
+          <li><a href="#section13.1" class="sub">Approach</a></li>
+          <li><a href="#section13.2" class="sub">Results</a></li>
         </ul>
       </nav>
 
@@ -39,7 +81,7 @@
           <h1>Project 5 - Diffusion Models</h1>
           <p>Filip Malm-Bägén</p>
           <hr />
-          <img id="hero" src="." alt="Hero" />
+          <img id="hero" src="../img/A/18.png" alt="Hero" />
           <h2>Part A - Introduction</h2>
           <p>
             This first part of the project goes through image diffusion models
@@ -79,7 +121,7 @@
 
         <!-- Section 1.1 -->
         <section id="section3">
-          <h2>Implementing the forward process</h2>
+          <h2>1.1 - Implementing the forward process</h2>
           <p></p>
 
           <section id="section3.1">
@@ -109,7 +151,7 @@
 
         <!-- Section 1.2 -->
         <section id="section4">
-          <h2>Classical Denoising</h2>
+          <h2>1.2 - Classical Denoising</h2>
           <p></p>
 
           <section id="section4.1">
@@ -139,7 +181,7 @@
 
         <!-- Section 1.3 -->
         <section id="section5">
-          <h2>Implementing One Step Denoising</h2>
+          <h2>1.3 - Implementing One Step Denoising</h2>
           <p></p>
 
           <section id="section5.1">
@@ -163,7 +205,246 @@
           <section id="section5.2">
             <h3>Results</h3>
             <figure>
-              <img src="../img/A/13.png" alt="" />
+              <img style="width: 50%" src="../img/A/13.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+          </section>
+        </section>
+
+        <!-- Section 1.4 -->
+        <section id="section6">
+          <h2>1.4 - Implementing Iterative Denoising</h2>
+          <p></p>
+
+          <section id="section6.1">
+            <h3>Approach</h3>
+            <p>
+              Next, I implemented iterative denoising by starting with a noisy
+              image at <code>t = 990</code>, and I progressively reduced noise
+              at strided timesteps, which interpolates between signal and noise.
+              Key parameters like <code>alpha</code>, <code>beta</code>, and
+              <code>alphas_cumprod</code> were computed at each step, with
+              variance added via the <code>add_variance</code> function to mimic
+              training conditions. Intermediate results every 5 steps showed
+              gradual noise reduction.
+            </p>
+          </section>
+
+          <section id="section6.2">
+            <h3>Results</h3>
+            <figure>
+              <img src="../img/A/14.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+          </section>
+        </section>
+
+        <!-- Section 1.5 -->
+        <section id="section7">
+          <h2>1.5 - Diffusion Model Sampling</h2>
+
+          <section id="section7.1">
+            <h3>Approach</h3>
+            <p>
+              A diffusion model was used to generate images from scratch by
+              denoising pure random noise. The process involved creating random
+              noise tensors using <code>torch.randn</code> and then denoising
+              the tensors with the <code>iterative_denoise</code> function. We
+              applied a prompt embedding for "a high quality photo" to guide the
+              generation process and repeated this five times to produce unique
+              images.
+            </p>
+          </section>
+
+          <section id="section7.2">
+            <h3>Results</h3>
+            <figure>
+              <img src="../img/A/15.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+          </section>
+        </section>
+
+        <!-- Section 1.6 -->
+        <section id="section8">
+          <h2>1.6 - Classifier Free Guidance</h2>
+
+          <section id="section8.1">
+            <h3>Approach</h3>
+            <p>
+              I used Classifier-Free Guidance (CFG) to enhance image quality by
+              combining conditional and unconditional noise estimates with a
+              scaling factor, γ, set to 7. This involved implementing the
+              <code>iterative_denoise_cfg</code> function, which denoises images
+              using both a prompt embedding for "a high quality photo" and an
+              empty prompt embedding for unconditional guidance. The UNet model
+              was run twice at each timestep to compute the conditional and
+              unconditional noise estimates, which were then combined using the
+              CFG formula. I did this five times, to generate images with
+              significantly improved quality compared to the previous section.
+            </p>
+          </section>
+
+          <section id="section8.2">
+            <h3>Results</h3>
+            <figure>
+              <img src="../img/A/16.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+          </section>
+        </section>
+
+        <!-- Section 1.7 -->
+        <section id="section9">
+          <h2>1.7 - Image-to-image Translation</h2>
+
+          <section id="section9.1">
+            <h3>Approach</h3>
+            <p>
+              I used the SDEdit algorithm to refine noisy images back to
+              natural-looking ones. Starting with the test image, I added noise
+              and denoised it using the
+              <code>iterative_denoise_cfg</code> function with starting indices
+              [1, 3, 5, 7, 10, 20]. The process was guided by the prompt "a high
+              quality photo" and a CFG scale of 7. I also repeated this on two
+              other test images to show how the method works for different
+              inputs.
+            </p>
+          </section>
+
+          <section id="section9.2">
+            <h3>Results</h3>
+            <figure>
+              <img src="../img/A/17.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+          </section>
+        </section>
+
+        <!-- Section 1.7.1 -->
+        <section id="section10">
+          <h2>1.7.1 - Image-to-image Translation</h2>
+
+          <section id="section10.1">
+            <h3>Approach</h3>
+            <p>
+              I experimented with editing non-realistic images, including one
+              downloaded from the web and two hand-drawn images. Using the
+              <code>iterative_denoise_cfg</code> function, I applied the same
+              noise levels ([1, 3, 5, 7, 10, 20]) to project these images onto
+              the natural image manifold. The preprocessing steps ensured the
+              input images fit the model's requirements, with resizing and
+              normalization. Results demonstrate how effectively the algorithm
+              transforms diverse inputs into photorealistic images.
+            </p>
+          </section>
+
+          <section id="section10.2">
+            <h3>Results</h3>
+            <figure>
+              <img src="../img/A/171.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+          </section>
+        </section>
+
+        <!-- Section 1.7.2 -->
+        <section id="section11">
+          <h2>1.7.2 - Inpainting</h2>
+
+          <section id="section11.1">
+            <h3>Approach</h3>
+            <p>
+              This function uses a binary mask to retain the original image
+              content in unmasked areas while applying iterative denoising to
+              generate new content in masked areas. I created a mask for the
+              Campanile test image and inpainted the top of the tower.
+              Additionally, I edited two custom images using unique masks for
+              creative inpainting tasks. The results demonstrate the ability to
+              seamlessly blend original and generated content.
+            </p>
+          </section>
+
+          <section id="section11.2">
+            <h3>Results</h3>
+            <figure>
+              <img src="../img/A/172.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+          </section>
+        </section>
+
+        <!-- Section 1.7.3 -->
+        <section id="section12">
+          <h2>1.7.3 - Text-Conditioned Image-to-image Translation</h2>
+
+          <section id="section12.1">
+            <h3>Approach</h3>
+            <p>
+              In this step, I used the text prompt "a rocket ship" to guide how
+              an image evolves during denoising. Starting with varying noise
+              levels [1, 3, 5, 7, 10, 20], the process blends the original image
+              with rocket-themed elements. I also applied this to two of my own
+              images, showing how text prompts can creatively transform visuals!
+            </p>
+          </section>
+
+          <section id="section12.2">
+            <h3>Results</h3>
+            <figure>
+              <img src="../img/A/173.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+          </section>
+        </section>
+
+        <!-- Section 1.8 -->
+        <section id="section13">
+          <h2>1.7.4 - Visual Anagrams</h2>
+
+          <section id="section13.1">
+            <h3>Approach</h3>
+            <p>
+              The Visual Anagrams technique creates an optical illusion where an
+              image of "an oil painting of an old man" turns into "an oil
+              painting of people around a campfire" when flipped upside down. By
+              denoising the image with two different prompts—one for the
+              original and one for the flipped version—and averaging the noise
+              estimates, we get this effect. Here’s an example where flipping
+              the image reveals a completely different scene.
+            </p>
+          </section>
+
+          <section id="section13.2">
+            <h3>Results</h3>
+            <figure>
+              <img src="../img/A/18.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+          </section>
+        </section>
+
+        <!-- Section 1.9 -->
+        <section id="section14">
+          <h2>1.7.4 - Visual Anagrams</h2>
+
+          <section id="section14.1">
+            <h3>Approach</h3>
+            <p>
+              The Visual Anagrams technique creates an optical illusion where an
+              image of "an oil painting of an old man" turns into "an oil
+              painting of people around a campfire" when flipped upside down. By
+              denoising the image with two different prompts—one for the
+              original and one for the flipped version—and averaging the noise
+              estimates, we get this effect. Here’s an example where flipping
+              the image reveals a completely different scene.
+            </p>
+          </section>
+
+          <section id="section14.2">
+            <h3>Results</h3>
+            <figure>
+              <img src="../img/A/19.png" alt="" />
               <figcaption></figcaption>
             </figure>
           </section>
