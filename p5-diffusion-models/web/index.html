@@ -1,3 +1,5 @@
+<!-- TODO: Enter figcaption -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -73,6 +75,15 @@
           <li><a href="#section13">Visual Anagrams</a></li>
           <li><a href="#section13.1" class="sub">Approach</a></li>
           <li><a href="#section13.2" class="sub">Results</a></li>
+
+          <li><a href="#section14">Hybrid Images</a></li>
+          <li><a href="#section14.1" class="sub">Approach</a></li>
+          <li><a href="#section14.2" class="sub">Results</a></li>
+
+          <li>
+            <a href="#section15">Training a Single-step Denoising UNet</a>
+          </li>
+          <li><a href="#section16">Training a Diffusion Model</a></li>
         </ul>
       </nav>
 
@@ -91,9 +102,11 @@
           </p>
         </section>
 
+        <!-- Part A -->
+
         <!-- Part 1 -->
         <section id="section2">
-          <h2>Sampling Loops</h2>
+          <h2>1. Sampling Loops</h2>
           <p></p>
 
           <section id="section2.1">
@@ -157,8 +170,8 @@
           <section id="section4.1">
             <h3>Approach</h3>
             <p>
-              In this section, I applied classical denoising techniques to the
-              noisy images from timesteps 250, 500, and 750 using
+              Denoising techniques was applied to the noisy images from
+              timesteps 250, 500, and 750 using
               <code>Gaussian blur filtering</code>. Each noisy image was
               processed with
               <code>torchvision.transforms.functional.gaussian_blur</code> to
@@ -400,7 +413,7 @@
 
         <!-- Section 1.8 -->
         <section id="section13">
-          <h2>1.7.4 - Visual Anagrams</h2>
+          <h2>1.8 - Visual Anagrams</h2>
 
           <section id="section13.1">
             <h3>Approach</h3>
@@ -426,18 +439,17 @@
 
         <!-- Section 1.9 -->
         <section id="section14">
-          <h2>1.7.4 - Visual Anagrams</h2>
+          <h2>1.9 - Hybrid Images</h2>
 
           <section id="section14.1">
             <h3>Approach</h3>
             <p>
-              The Visual Anagrams technique creates an optical illusion where an
-              image of "an oil painting of an old man" turns into "an oil
-              painting of people around a campfire" when flipped upside down. By
-              denoising the image with two different prompts—one for the
-              original and one for the flipped version—and averaging the noise
-              estimates, we get this effect. Here’s an example where flipping
-              the image reveals a completely different scene.
+              The Hybrid Images technique combines low-frequency details from
+              one image and high-frequency details from another using a
+              diffusion model. By generating separate noise estimates for each
+              image with different text prompts and applying low-pass and
+              high-pass filters, we blend the two to create an image that looks
+              like one object from afar and another up close.
             </p>
           </section>
 
@@ -445,6 +457,91 @@
             <h3>Results</h3>
             <figure>
               <img src="../img/A/19.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+          </section>
+        </section>
+
+        <!-- Part B -->
+        <section id="section15">
+          <h2>Part B - Training Your Own Diffusion Model!</h2>
+          <p></p>
+        </section>
+
+        <!-- Part 1 -->
+        <section id="section15">
+          <h2>1 - Training a Single-step Denoising UNet</h2>
+
+          <section id="section15.1">
+            <p>
+              I implemented U-Net which takes a noisy image as input and
+              predicts the noise from the original image. Below are the results
+              from visualizing the effect of <code>sigma=0.5</code> on adding
+              noise to the image, so the model only sees one sigma. The loss
+              quickly reduces and the train and test loss intersects at around
+              0.009.
+            </p>
+
+            <figure>
+              <img src="../img/B/1.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+
+            <figure>
+              <img src="../img/B/2.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+
+            <p>
+              Even though the model only sees one sigma, it is able to denoise
+              images with different noise levels. I tried sigma levels of [0.0,
+              0.2, 0.4, 0.6, 0.8] and the model was able to denoise all of them.
+              The model is struggling with sigmas of 0.6 and 0.8, but it is
+              still able to denoise them.
+            </p>
+          </section>
+        </section>
+
+        <!-- part 2 -->
+        <section id="section16">
+          <h2>1 - Training a Diffusion Model</h2>
+
+          <section id="section16.1">
+            <figure>
+              <img src="../img/B/4.png" alt="Samples after epoch 20" />
+              <figcaption>Samples after epoch 20</figcaption>
+            </figure>
+
+            <p>
+              I implemented a U-Net which is only dependent on time. The
+              training batch loss function decreases rapidly after around 300
+              iterations, and stabilizes at around 0.01. The training epoch loss
+              function stabilizes at around 0.03 after 18 epochs.
+            </p>
+
+            <figure>
+              <img src="../img/B/5.png" alt="Training batch loss graph" />
+              <figcaption>Training batch loss graph</figcaption>
+            </figure>
+
+            <figure>
+              <img src="../img/B/6.png" alt="Training epoch loss graph" />
+              <figcaption>Training epoch loss graph</figcaption>
+            </figure>
+
+            <p>
+              The result below shows the denoising process for
+              <code>guidance_scale = 0</code>,
+              <code>guidance_scale = 5</code> and
+              <code>guidance_scale = 10</code>. The denoising is good for all
+              scales, but the classes doesn't become correct until
+              <code>guidance_scale = 5</code>. For
+              <code>guidance_scale = 0</code>, the model does not correctly
+              create the classes.
+            </p>
+
+            <figure>
+              <img src="../img/B/7.png" alt="" />
               <figcaption></figcaption>
             </figure>
           </section>
