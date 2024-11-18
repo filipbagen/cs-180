@@ -58,7 +58,7 @@
           <li><a href="#section9.1" class="sub">Approach</a></li>
           <li><a href="#section9.2" class="sub">Results</a></li>
 
-          <li><a href="#section10">Image-to-image Translation</a></li>
+          <li><a href="#section10">Editing Hand-Drawn and Web Images</a></li>
           <li><a href="#section10.1" class="sub">Approach</a></li>
           <li><a href="#section10.2" class="sub">Results</a></li>
 
@@ -119,7 +119,7 @@
               controlled by DeepFloyd’s pre-set coefficients,
               <code>alphas_cumprod</code>. The sample image was resized to 64
               &times; 64, scaled to [-1, 1], and prepared as input for the
-              denoising process.
+              denoising process. The random seed I am using is 3141592.
             </p>
           </section>
 
@@ -129,6 +129,8 @@
               <img src="../img/A/1.png" alt="" />
               <figcaption></figcaption>
             </figure>
+
+            <!-- TODO: Add figures for different num_inference_steps and reflect on the quality of the outputs and their relationships to the text prompts -->
           </section>
         </section>
 
@@ -156,8 +158,13 @@
           <section id="section3.2">
             <h3>Results</h3>
             <figure>
-              <img src="../img/A/11.png" alt="" />
-              <figcaption></figcaption>
+              <img
+                src="../img/A/11.png"
+                alt="Test image with noise levels 250, 500, 750"
+              />
+              <figcaption>
+                Test image with noise levels 250, 500, 750
+              </figcaption>
             </figure>
           </section>
         </section>
@@ -186,8 +193,14 @@
           <section id="section4.2">
             <h3>Results</h3>
             <figure>
-              <img src="../img/A/12.png" alt="" />
-              <figcaption></figcaption>
+              <div style="display: flex; flex-direction: column; width: 520px">
+                <img src="../img/A/11.png" alt="" />
+                <img src="../img/A/12.png" alt="" />
+              </div>
+              <figcaption>
+                Test image with gaussian blur for noise levels 250, 500, 750
+                compared to the noise images
+              </figcaption>
             </figure>
           </section>
         </section>
@@ -218,8 +231,15 @@
           <section id="section5.2">
             <h3>Results</h3>
             <figure>
-              <img style="width: 50%" src="../img/A/13.png" alt="" />
-              <figcaption></figcaption>
+              <img
+                style="width: 50%"
+                src="../img/A/13.png"
+                alt="Original image, noisy image and estimated original image for t = 250, 500, 750"
+              />
+              <figcaption>
+                Original image, noisy image and estimated original image for t =
+                250, 500, 750
+              </figcaption>
             </figure>
           </section>
         </section>
@@ -246,8 +266,14 @@
           <section id="section6.2">
             <h3>Results</h3>
             <figure>
-              <img src="../img/A/14.png" alt="" />
-              <figcaption></figcaption>
+              <img
+                src="../img/A/14.png"
+                alt="Original, noisy, iterative denoised, one step denoised and gaussian blurred image next to each other"
+              />
+              <figcaption>
+                Original, noisy, iterative denoised, one step denoised and
+                gaussian blurred image next to each other
+              </figcaption>
             </figure>
           </section>
         </section>
@@ -272,8 +298,8 @@
           <section id="section7.2">
             <h3>Results</h3>
             <figure>
-              <img src="../img/A/15.png" alt="" />
-              <figcaption></figcaption>
+              <img src="../img/A/15.png" alt="5 sampled images" />
+              <figcaption>5 sampled images</figcaption>
             </figure>
           </section>
         </section>
@@ -301,12 +327,18 @@
           <section id="section8.2">
             <h3>Results</h3>
             <figure>
-              <img src="../img/A/16.png" alt="" />
-              <figcaption></figcaption>
+              <img
+                src="../img/A/16.png"
+                alt="5 images of a high quality photo, with CFG scale of γ = 7"
+              />
+              <figcaption>
+                5 images of "a high quality photo, with CFG scale of γ = 7
+              </figcaption>
             </figure>
           </section>
         </section>
 
+        <!-- TODO: 2 of my own photos -->
         <!-- Section 1.7 -->
         <section id="section9">
           <h2>1.7 - Image-to-image Translation</h2>
@@ -328,15 +360,25 @@
           <section id="section9.2">
             <h3>Results</h3>
             <figure>
-              <img src="../img/A/17.png" alt="" />
-              <figcaption></figcaption>
+              <img
+                src="../img/A/17.png"
+                alt="Edits of the test image, using the given prompt at noise levels [1, 3, 5, 7, 10, 20] with text prompt 'a high quality photo'"
+              />
+              <figcaption>
+                Edits of the test image, using the given prompt at noise levels
+                [1, 3, 5, 7, 10, 20] with text prompt "a high quality photo"
+              </figcaption>
             </figure>
           </section>
         </section>
 
+        <!-- TODO: 
+          1 image from the web of your choice, edited using the above method for noise levels [1, 3, 5, 7, 10, 20] (and whatever additional noise levels you want)
+          2 hand drawn images, edited using the above method for noise levels [1, 3, 5, 7, 10, 20] (and whatever additional noise levels you want) 
+          -->
         <!-- Section 1.7.1 -->
         <section id="section10">
-          <h2>1.7.1 - Image-to-image Translation</h2>
+          <h2>1.7.1 - Editing Hand-Drawn and Web Images</h2>
 
           <section id="section10.1">
             <h3>Approach</h3>
@@ -361,6 +403,7 @@
           </section>
         </section>
 
+        <!-- TODO: 2 of your own images edited (come up with your own mask) -->
         <!-- Section 1.7.2 -->
         <section id="section11">
           <h2>1.7.2 - Inpainting</h2>
@@ -387,6 +430,7 @@
           </section>
         </section>
 
+        <!-- TODO: Edits of 2 of your own test images, using the same procedure -->
         <!-- Section 1.7.3 -->
         <section id="section12">
           <h2>1.7.3 - Text-Conditioned Image-to-image Translation</h2>
@@ -405,12 +449,19 @@
           <section id="section12.2">
             <h3>Results</h3>
             <figure>
-              <img src="../img/A/173.png" alt="" />
-              <figcaption></figcaption>
+              <img
+                src="../img/A/173.png"
+                alt="Edits of the test image, using the given prompt at noise levels [1, 3, 5, 7, 10, 20]"
+              />
+              <figcaption>
+                Edits of the test image, using the given prompt at noise levels
+                [1, 3, 5, 7, 10, 20]
+              </figcaption>
             </figure>
           </section>
         </section>
 
+        <!-- TODO: 2 more illusions of your choice that change appearance when you flip it upside down. -->
         <!-- Section 1.8 -->
         <section id="section13">
           <h2>1.8 - Visual Anagrams</h2>
@@ -431,8 +482,14 @@
           <section id="section13.2">
             <h3>Results</h3>
             <figure>
-              <img src="../img/A/18.png" alt="" />
-              <figcaption></figcaption>
+              <img
+                src="../img/A/18.png"
+                alt="Left: 'an oil painting of an old man'. Right: 'an oil painting of people around a campfire'"
+              />
+              <figcaption>
+                Left: 'an oil painting of an old man'. Right: 'an oil painting
+                of people around a campfire'
+              </figcaption>
             </figure>
           </section>
         </section>
@@ -456,8 +513,13 @@
           <section id="section14.2">
             <h3>Results</h3>
             <figure>
-              <img src="../img/A/19.png" alt="" />
-              <figcaption></figcaption>
+              <img
+                src="../img/A/19.png"
+                alt="Far: Image of a skull. Close: Image of a waterfall"
+              />
+              <figcaption>
+                Far: Image of a skull. Close: Image of a waterfall
+              </figcaption>
             </figure>
           </section>
         </section>
