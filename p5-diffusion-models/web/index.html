@@ -103,6 +103,31 @@
         </section>
 
         <!-- Part A -->
+        <section id="section0">
+          <h2>0. Sampling from the Model</h2>
+          <p></p>
+
+          <section id="section0.1">
+            <h3>Approach</h3>
+            <p>
+              I ran the code for <code>num_inference_steps = 5, 10, 100</code>.
+              The quality of the images, especially for the man, improved with
+              more inference steps.
+            </p>
+          </section>
+
+          <section id="section0.2">
+            <h3>Results</h3>
+            <figure>
+              <img src="../img/A/setup_5.png" alt="" />
+              <img src="../img/A/setup_10.png" alt="" />
+              <img src="../img/A/setup_100.png" alt="" />
+              <figcaption></figcaption>
+            </figure>
+
+            <!-- TODO: Add figures for different num_inference_steps and reflect on the quality of the outputs and their relationships to the text prompts -->
+          </section>
+        </section>
 
         <!-- Part 1 -->
         <section id="section2">
@@ -338,7 +363,6 @@
           </section>
         </section>
 
-        <!-- TODO: 2 of my own photos -->
         <!-- Section 1.7 -->
         <section id="section9">
           <h2>1.7 - Image-to-image Translation</h2>
@@ -353,7 +377,9 @@
               [1, 3, 5, 7, 10, 20]. The process was guided by the prompt "a high
               quality photo" and a CFG scale of 7. I also repeated this on two
               other test images to show how the method works for different
-              inputs.
+              inputs. The model seems to have a bias agains women, as the
+              generated images mostly contain women, even though the original
+              image has nothing to do with it.
             </p>
           </section>
 
@@ -369,13 +395,36 @@
                 [1, 3, 5, 7, 10, 20] with text prompt "a high quality photo"
               </figcaption>
             </figure>
+
+            <div style="display: flex">
+              <figure>
+                <img src="../img/A/17-1.png" alt="Edits of the windmill" />
+                <figcaption>Edits of the windmill</figcaption>
+              </figure>
+
+              <figure>
+                <img
+                  src="../img/A/windmill.jpg"
+                  alt="Original image of a windmill"
+                />
+                <figcaption>Original image of a windmill</figcaption>
+              </figure>
+            </div>
+
+            <div style="display: flex">
+              <figure>
+                <img src="../img/A/17-2.png" alt="Edits of myself" />
+                <figcaption>Edits of myself</figcaption>
+              </figure>
+
+              <figure>
+                <img src="../img/A/filip.jpg" alt="Original image of me" />
+                <figcaption>Original image of me</figcaption>
+              </figure>
+            </div>
           </section>
         </section>
 
-        <!-- TODO: 
-          1 image from the web of your choice, edited using the above method for noise levels [1, 3, 5, 7, 10, 20] (and whatever additional noise levels you want)
-          2 hand drawn images, edited using the above method for noise levels [1, 3, 5, 7, 10, 20] (and whatever additional noise levels you want) 
-          -->
         <!-- Section 1.7.1 -->
         <section id="section10">
           <h2>1.7.1 - Editing Hand-Drawn and Web Images</h2>
@@ -395,15 +444,55 @@
           </section>
 
           <section id="section10.2">
-            <h3>Results</h3>
-            <figure>
-              <img src="../img/A/171.png" alt="" />
-              <figcaption></figcaption>
-            </figure>
+            <h3>Results - Web Image</h3>
+            <div style="display: flex">
+              <figure>
+                <img src="../img/A/pettson.jpg" alt="Original image" />
+                <figcaption>Original image</figcaption>
+              </figure>
+
+              <figure>
+                <img
+                  src="../img/A/171-1.png"
+                  alt="Edit at different noise levels"
+                />
+                <figcaption>Edit at different noise levels</figcaption>
+              </figure>
+            </div>
+
+            <h3>Results - Hand drawn image</h3>
+            <div style="display: flex">
+              <figure>
+                <img src="../img/A/171-2-original.png" alt="Original image" />
+                <figcaption>Original image</figcaption>
+              </figure>
+
+              <figure>
+                <img
+                  src="../img/A/171-2.png"
+                  alt="Edit at different noise levels"
+                />
+                <figcaption>Edit at different noise levels</figcaption>
+              </figure>
+            </div>
+
+            <div style="display: flex">
+              <figure>
+                <img src="../img/A/171-3-original.png" alt="Original image" />
+                <figcaption>Original image</figcaption>
+              </figure>
+
+              <figure>
+                <img
+                  src="../img/A/171-3.png"
+                  alt="Edit at different noise levels"
+                />
+                <figcaption>Edit at different noise levels</figcaption>
+              </figure>
+            </div>
           </section>
         </section>
 
-        <!-- TODO: 2 of your own images edited (come up with your own mask) -->
         <!-- Section 1.7.2 -->
         <section id="section11">
           <h2>1.7.2 - Inpainting</h2>
@@ -422,15 +511,76 @@
           </section>
 
           <section id="section11.2">
-            <h3>Results</h3>
-            <figure>
-              <img src="../img/A/172.png" alt="" />
-              <figcaption></figcaption>
-            </figure>
+            <h3>Result - Campanile</h3>
+            <div style="display: flex; align-items: flex-start">
+              <figure style="margin: 0">
+                <img
+                  src="../img/A/172.png"
+                  alt="Stages"
+                  style="height: 220px"
+                />
+                <figcaption>Stages</figcaption>
+              </figure>
+
+              <figure style="margin: 0">
+                <img
+                  src="../img/A/172-inpaint.png"
+                  alt="Inpainted image of the Campanile"
+                  style="height: 220px"
+                />
+                <figcaption>Inpainted image of the Campanile</figcaption>
+              </figure>
+            </div>
+
+            <h3>Results - Custom images</h3>
+            <div style="display: flex; align-items: flex-start">
+              <figure style="margin: 0">
+                <img
+                  src="../img/A/172-2-inpaint.png"
+                  alt="Stages"
+                  style="height: 220px"
+                />
+                <figcaption>Stages</figcaption>
+              </figure>
+
+              <figure style="margin: 0">
+                <img
+                  src="../img/A/172-2.png"
+                  alt="Inpainted image of the Golden Gate Bridge"
+                  style="height: 220px"
+                />
+                <figcaption>
+                  Inpainted image of the Golden Gate Bridge
+                </figcaption>
+              </figure>
+            </div>
+
+            <div style="display: flex; align-items: flex-start">
+              <figure style="margin: 0">
+                <img
+                  src="../img/A/172-3-inpaint.png"
+                  alt="Stages"
+                  style="height: 220px"
+                />
+                <figcaption>Stages</figcaption>
+              </figure>
+
+              <figure style="margin: 0">
+                <img
+                  src="../img/A/172-3.png"
+                  alt="Inpainted image of The Son of Man"
+                  style="height: 220px"
+                />
+                <figcaption>Inpainted image of The Son of Man</figcaption>
+              </figure>
+            </div>
+            <p>
+              Perfect! I have always wondered what the face behind the apple
+              looks like. Now we all know.
+            </p>
           </section>
         </section>
 
-        <!-- TODO: Edits of 2 of your own test images, using the same procedure -->
         <!-- Section 1.7.3 -->
         <section id="section12">
           <h2>1.7.3 - Text-Conditioned Image-to-image Translation</h2>
@@ -458,10 +608,62 @@
                 [1, 3, 5, 7, 10, 20]
               </figcaption>
             </figure>
+
+            <h3>Results - Custom Images</h3>
+            <div style="display: flex; align-items: flex-start">
+              <figure style="margin: 0">
+                <img
+                  src="../img/A/apple.jpg"
+                  alt="Original image of an apple"
+                  style="height: 220px"
+                />
+                <figcaption>Original image of an apple</figcaption>
+              </figure>
+
+              <figure style="margin: 0">
+                <img
+                  src="../img/A/173-2.png"
+                  alt="Apple image at various noise levels for the prompt 'a rocket ship'."
+                  style="height: 220px"
+                />
+                <figcaption>
+                  Apple image at various noise levels for the prompt 'a rocket
+                  ship'.
+                </figcaption>
+              </figure>
+            </div>
+
+            <div style="display: flex; align-items: flex-start">
+              <figure style="margin: 0">
+                <img
+                  src="../img/A/the_rock.jpg"
+                  alt="Original image of The Rock"
+                  style="height: 220px"
+                />
+                <figcaption>Original image of The Rock</figcaption>
+              </figure>
+
+              <figure style="margin: 0">
+                <img
+                  src="../img/A/173-3.png"
+                  alt="The Rock at various noise levels for the prompt 'a rocket ship'"
+                  style="height: 220px"
+                />
+                <figcaption>
+                  The Rock at various noise levels for the prompt 'a rocket
+                  ship'
+                </figcaption>
+              </figure>
+            </div>
+            <p>
+              I wanted to test the algorithm to see how it behaves on images
+              which does not resemble rocket ships at all. On a low noise level
+              it creates rocket ships, but the higher the noise, the more it
+              resembles the original image.
+            </p>
           </section>
         </section>
 
-        <!-- TODO: 2 more illusions of your choice that change appearance when you flip it upside down. -->
         <!-- Section 1.8 -->
         <section id="section13">
           <h2>1.8 - Visual Anagrams</h2>
@@ -481,16 +683,42 @@
 
           <section id="section13.2">
             <h3>Results</h3>
-            <figure>
-              <img
-                src="../img/A/18.png"
-                alt="Left: 'an oil painting of an old man'. Right: 'an oil painting of people around a campfire'"
-              />
-              <figcaption>
-                Left: 'an oil painting of an old man'. Right: 'an oil painting
-                of people around a campfire'
-              </figcaption>
-            </figure>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px">
+              <figure style="flex: 1 1 30%">
+                <img
+                  src="../img/A/18.png"
+                  alt="Left: 'an oil painting of an old man'. Right: 'an oil painting of people around a campfire'"
+                  style="width: 100%"
+                />
+                <figcaption>
+                  Left: 'an oil painting of an old man'. Right: 'an oil painting
+                  of people around a campfire'
+                </figcaption>
+              </figure>
+
+              <figure style="flex: 1 1 30%">
+                <img
+                  src="../img/A/18-1.png"
+                  alt="Left: 'a photo of a hipster barista'. Right: 'a man wearing a hat'"
+                  style="width: 100%"
+                />
+                <figcaption>
+                  Left: 'a photo of a hipster barista'. Right: 'a man wearing a
+                  hat'
+                </figcaption>
+              </figure>
+
+              <figure style="flex: 1 1 30%">
+                <img
+                  src="../img/A/18-2.png"
+                  alt="Left: 'a photo of a dog'. Right: 'a pencil'"
+                  style="width: 100%"
+                />
+                <figcaption>
+                  Left: 'a photo of a dog'. Right: 'a pencil'
+                </figcaption>
+              </figure>
+            </div>
           </section>
         </section>
 
@@ -512,16 +740,48 @@
 
           <section id="section14.2">
             <h3>Results</h3>
-            <figure>
-              <img
-                src="../img/A/19.png"
-                alt="Far: Image of a skull. Close: Image of a waterfall"
-              />
-              <figcaption>
-                Far: Image of a skull. Close: Image of a waterfall
-              </figcaption>
-            </figure>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px">
+              <figure style="flex: 1 1 30%">
+                <img
+                  src="../img/A/19.png"
+                  alt="Far: Image of a skull. Close: Image of a waterfall"
+                  style="width: 100%"
+                />
+                <figcaption>
+                  Far: Image of a skull. Close: Image of a waterfall
+                </figcaption>
+              </figure>
+
+              <figure style="flex: 1 1 30%">
+                <img
+                  src="../img/A/19-1.png"
+                  alt="Far: a man wearing a hat. Close: a photo of the amalfi cost"
+                  style="width: 100%"
+                />
+                <figcaption>
+                  Far: a man wearing a hat. Close: a photo of the amalfi cost
+                </figcaption>
+              </figure>
+
+              <figure style="flex: 1 1 30%">
+                <img
+                  src="../img/A/19-2.png"
+                  alt="Far: a rocket ship. Close: a pencil"
+                  style="width: 100%"
+                />
+                <figcaption>Far: a rocket ship. Close: a pencil</figcaption>
+              </figure>
+            </div>
           </section>
+        </section>
+
+        <!-- Final remarks for Part A -->
+        <section>
+          <h3>Final remarks for Part A</h3>
+          <p>
+            I thought this part was very cool and very interesting. I learned a
+            lot of new things, and I look forward to part B.
+          </p>
         </section>
 
         <!-- Part B -->
@@ -537,11 +797,25 @@
           <section id="section15.1">
             <p>
               I implemented U-Net which takes a noisy image as input and
-              predicts the noise from the original image. Below are the results
-              from visualizing the effect of <code>sigma=0.5</code> on adding
-              noise to the image, so the model only sees one sigma. The loss
-              quickly reduces and the train and test loss intersects at around
-              0.009.
+              predicts the noise from the original image. It consists of down
+              and upsampling blcok with skip connections. This captures both
+              global and local features. The UNet structure is good for
+              image-to-image task, for example denoising.
+            </p>
+
+            <figure>
+              <img
+                src="../img/B/unet.png"
+                alt="UNet Architecture for denoising"
+              />
+              <figcaption>UNet Architecture for denoising</figcaption>
+            </figure>
+
+            <p>
+              Below are the results from visualizing the effect of
+              <code>sigma=0.5</code> on adding noise to the image, so the model
+              only sees one sigma. The loss quickly reduces and the train and
+              test loss intersects at around 0.009.
             </p>
 
             <figure>
@@ -549,64 +823,225 @@
               <figcaption></figcaption>
             </figure>
 
+            <p>
+              For training, I used the image class pairs from MNIST dataset. I
+              used <code>batch_size = 256</code>, <code>num_epochs = 5</code>,
+              <code>sigma = 0.5</code>, and the Adam optimizer with a learning
+              rate of 0.0001.
+            </p>
+
             <figure>
-              <img src="../img/B/2.png" alt="" />
-              <figcaption></figcaption>
+              <img src="../img/B/2.png" alt="Train and Testing Loss" />
+              <figcaption>Train and Testing Loss</figcaption>
+            </figure>
+
+            <figure>
+              <img src="../img/B/3.png" alt="Train loss per iteration" />
+              <figcaption>Train loss per iteration</figcaption>
             </figure>
 
             <p>
-              Even though the model only sees one sigma, it is able to denoise
-              images with different noise levels. I tried sigma levels of [0.0,
-              0.2, 0.4, 0.6, 0.8] and the model was able to denoise all of them.
-              The model is struggling with sigmas of 0.6 and 0.8, but it is
-              still able to denoise them.
+              Below, the results from the training can be seen, where the
+              performacce between the results from 1 epoch and 5 epochs can be
+              seen. The model is much better at denoising after 5 epochs.
             </p>
+
+            <div style="display: flex; gap: 20px">
+              <figure>
+                <img
+                  src="../img/B/4.png"
+                  alt="Sample denoised images for epoch 1"
+                />
+                <figcaption>Sample denoised images for epoch 1</figcaption>
+              </figure>
+
+              <figure>
+                <img
+                  src="../img/B/5.png"
+                  alt="Sample denoised images for epoch 5"
+                />
+                <figcaption>Sample denoised images for epoch 5</figcaption>
+              </figure>
+            </div>
+
+            <p>
+              It is interesting to observe its performance with different sigma
+              values, representing higher and lower noise levels than those used
+              during training. The image below illustrates this performance.
+            </p>
+
+            <figure>
+              <img
+                src="../img/B/6.png"
+                alt="Different values of sigma, when trained on sigma = 0.5"
+              />
+              <figcaption>
+                Different values of sigma, when trained on
+                <code>sigma = 0.5</code>
+              </figcaption>
+            </figure>
           </section>
         </section>
 
         <!-- part 2 -->
         <section id="section16">
-          <h2>1 - Training a Diffusion Model</h2>
+          <h2>2 - Training a Diffusion Model</h2>
 
           <section id="section16.1">
-            <figure>
-              <img src="../img/B/4.png" alt="Samples after epoch 20" />
-              <figcaption>Samples after epoch 20</figcaption>
-            </figure>
+            <p>
+              In the previous section, the UNet model was designed to predict
+              the clean image directly. In this section, I modify the approach
+              to predict the noise ϵ that was added to the image. This
+              adjustment enables us to begin with pure noise ϵ ∼ N(0, I) and
+              progressively denoise it to produce a realistic image x.
+            </p>
+
+            <h3>Combination of Time and Class Conditioning</h3>
+            <p>
+              We condition the UNet on both the timestep t and the digit class
+              simultaneously. Using the equation: xt = √ᾱtx0 + √(1−ᾱt)ϵ, where
+              ϵ∼N(0,1), we generate a noisy image xt from x0 for a timestep
+              t∈{0,1,…,T}. At t=0, xt is the original clean image, and at t=T,
+              xt is entirely noise. For intermediate values of t, xt is a blend
+              of the clean image and noise. We set T = 400 due to the simplicity
+              of our dataset. Time conditioning is incorporated using fully
+              connected layers to embed t into the UNet, and class conditioning
+              uses one-hot vectors and additional fully connected layers to
+              embed the class vector. Below is the updated UNet architecture,
+              which includes both time and class conditioning, as well as the
+              new training algorithm used.
+            </p>
+
+            <div style="display: flex; gap: 20px">
+              <figure>
+                <img
+                  src="../img/B/unet_update.png"
+                  alt="UNet Architecture for denoising with time and class conditioning"
+                />
+                <figcaption>
+                  UNet Architecture for denoising with time and class
+                  conditioning
+                </figcaption>
+              </figure>
+
+              <figure>
+                <img
+                  src="../img/B/algorithm1.png"
+                  alt="Training algorithm with time and class conditioning"
+                />
+                <figcaption>
+                  Training algorithm with time and class conditioning
+                </figcaption>
+              </figure>
+            </div>
 
             <p>
-              I implemented a U-Net which is only dependent on time. The
-              training batch loss function decreases rapidly after around 300
-              iterations, and stabilizes at around 0.01. The training epoch loss
-              function stabilizes at around 0.03 after 18 epochs.
+              During training, noisy images, xt, are created for random
+              timesteps, and their one-hot class vectors are computed. The UNet
+              is then trained to predict ϵ. By incorporating class conditioning,
+              we achieve better control over the generated images, while time
+              conditioning facilitates iterative denoising. The results below,
+              after the twentieth epoch, demonstrate that the model performs
+              exceptionally well, producing accurate and detailed numbers. Below
+              is the results from the time and class conditional UNet.
             </p>
 
             <figure>
-              <img src="../img/B/5.png" alt="Training batch loss graph" />
-              <figcaption>Training batch loss graph</figcaption>
+              <img
+                src="../img/B/7.png"
+                alt="Training loss for the batch size"
+              />
+              <figcaption>Training loss for the batch size</figcaption>
             </figure>
 
-            <figure>
-              <img src="../img/B/6.png" alt="Training epoch loss graph" />
-              <figcaption>Training epoch loss graph</figcaption>
-            </figure>
+            <div style="display: flex; flex-direction: column">
+              <figure>
+                <img
+                  src="../img/B/8.png"
+                  alt="Sample after 1 epochs, guidensescale = 5"
+                />
+                <figcaption>
+                  Sample after 1 epochs, <code>guidensescale = 5</code>
+                </figcaption>
+              </figure>
+
+              <figure>
+                <img
+                  src="../img/B/9.png"
+                  alt="Sample after 5 epochs, guidensescale = 5"
+                />
+                <figcaption>
+                  Sample after 5 epochs, <code>guidensescale = 5</code>
+                </figcaption>
+              </figure>
+
+              <figure>
+                <img
+                  src="../img/B/10.png"
+                  alt="Sample after 20 epochs, guidensescale = 5"
+                />
+                <figcaption>
+                  Sample after 20 epochs, <code>guidensescale = 5</code>
+                </figcaption>
+              </figure>
+            </div>
 
             <p>
-              The result below shows the denoising process for
-              <code>guidance_scale = 0</code>,
-              <code>guidance_scale = 5</code> and
-              <code>guidance_scale = 10</code>. The denoising is good for all
-              scales, but the classes doesn't become correct until
-              <code>guidance_scale = 5</code>. For
-              <code>guidance_scale = 0</code>, the model does not correctly
-              create the classes.
+              We can compare this to the Time Conditioned UNet which has no
+              classes. The results can be seen below. As seen, the numbers are
+              not as good without the classifier free guidance.
             </p>
 
             <figure>
-              <img src="../img/B/7.png" alt="" />
-              <figcaption></figcaption>
+              <img
+                src="../img/B/11.png"
+                alt="Training loss for the batch loss"
+              />
+              <figcaption>Training loss for the batch loss</figcaption>
             </figure>
+
+            <div style="display: flex; flex-direction: column">
+              <figure>
+                <img
+                  src="../img/B/12.png"
+                  alt="Sample after 1 epochs, guidensescale = 5"
+                />
+                <figcaption>
+                  Sample after 1 epochs, <code>guidensescale = 5</code>
+                </figcaption>
+              </figure>
+
+              <figure>
+                <img
+                  src="../img/B/13.png"
+                  alt="Sample after 5 epochs, guidensescale = 5"
+                />
+                <figcaption>
+                  Sample after 5 epochs, <code>guidensescale = 5</code>
+                </figcaption>
+              </figure>
+
+              <figure>
+                <img
+                  src="../img/B/14.png"
+                  alt="Sample after 20 epochs, guidensescale = 5"
+                />
+                <figcaption>
+                  Sample after 20 epochs, <code>guidensescale = 5</code>
+                </figcaption>
+              </figure>
+            </div>
           </section>
+        </section>
+
+        <!-- Final remarks for Part B -->
+        <section>
+          <h3>Final remarks for Part B</h3>
+          <p>
+            This was a very fun and cool project. The most interesting part was
+            the classifier free guidance, where the model was able to generate
+            very good numbers.
+          </p>
         </section>
 
         <p>
