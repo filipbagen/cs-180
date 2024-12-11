@@ -50,7 +50,13 @@
           <hr />
           <img id="hero" src="../img/A/18.png" alt="Hero" />
           <h2>Introduction</h2>
-          <p>This project is about fitting a Neural Field to a 2D Image.</p>
+          <p>
+            This project is about implementing neural radiance fields (NeRFs) to
+            reconstruct 3D scenes from 2D images by sampling and querying rays
+            to integrate color information. The goal is to build efficient and
+            robust methods for ray generation, sampling, and rendering to ensure
+            high-quality results while minimizing overfitting.
+          </p>
         </section>
 
         <!-- Part 1 -->
@@ -64,8 +70,12 @@
             architecture:
           </p>
 
-          <figure>
-            <img src="../data/result/2dmlp.png" alt="MLP Architecture" />
+          <figure style="text-align: center">
+            <img
+              src="../data/result/2dmlp.png"
+              alt="MLP Architecture"
+              style="height: 200px"
+            />
             <figcaption>2D MLP Architecture</figcaption>
           </figure>
 
@@ -90,7 +100,6 @@
             the palace image, where the wider configuration performed the best.
             This is likely due to the increased complexity of the image.
           </p>
-          <!-- TODO: Add another image and original images -->
 
           <!-- Table -->
           <table>
@@ -130,7 +139,14 @@
             </tr>
           </table>
 
-          <p>The images represent iteration [1, 20, 100, 500, 1000, 2000]</p>
+          <figure style="text-align: center">
+            <img
+              src="../data/fox.jpg"
+              alt="Original fox image"
+              style="height: 200px"
+            />
+            <figcaption>Original fox image</figcaption>
+          </figure>
 
           <figure>
             <img
@@ -154,10 +170,22 @@
             />
             <figcaption>Higher learning rate on fox</figcaption>
           </figure>
+          x
 
-          <figure>
+          <p>The images represent iteration [1, 20, 100, 500, 1000, 2000]</p>
+
+          <figure style="text-align: center">
             <img src="../data/result/PSNR_vs_iter_fox.png" alt="PSNR fox" />
             <figcaption>PSNR for different configurations for fox</figcaption>
+          </figure>
+
+          <figure style="text-align: center">
+            <img
+              src="../data/palace_of_fine_arts.jpeg"
+              alt="Original Palace of Fine Arts image"
+              style="height: 200px"
+            />
+            <figcaption>Original Palace of Fine Arts image</figcaption>
           </figure>
 
           <figure>
@@ -222,16 +250,15 @@
             coordinates into rays, defined by their origin (<code
               >r<sub>o</sub></code
             >) and normalized direction (<code>r<sub>d</sub></code
-            >). The process involves several steps: First, coordinate
-            transformations are performed. A function transforms camera
-            coordinates to world coordinates using the camera-to-world
-            (<code>c2w</code>) matrix. Another function transforms pixel
+            >). The coordinate transformations are performed and a function
+            transforms camera coordinates to world coordinates using the
+            camera-to-world matrix. Another function transforms pixel
             coordinates to camera coordinates using the intrinsic matrix and
             pixel depth. For ray generation, the ray origin is the camera's
-            translation vector (<code>t</code>), and the direction is computed
-            by normalizing the difference between the world coordinate of a
-            depth-1 point and the origin. These transformations are implemented
-            using batched matrix multiplications for efficiency.
+            translation vector, and the direction is computed by normalizing the
+            difference between the world coordinate of a depth-1 point and the
+            origin. These transformations are implemented using batched matrix
+            multiplications for efficiency.
           </p>
         </section>
 
