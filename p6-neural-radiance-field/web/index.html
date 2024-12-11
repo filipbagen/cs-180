@@ -1,5 +1,3 @@
-<!-- TODO: Enter figcaption -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -24,1024 +22,339 @@
     <div class="container">
       <nav class="sidebar">
         <ul>
-          <li><a href="#section1">Introduction</a></li>
-
-          <li><a href="#section2">Sampling Loops</a></li>
-          <li><a href="#section2.1" class="sub">Approach</a></li>
-          <li><a href="#section2.2" class="sub">Results</a></li>
-
-          <li><a href="#section3">Implementing the forward process</a></li>
-          <li><a href="#section3.1" class="sub">Approach</a></li>
-          <li><a href="#section3.2" class="sub">Results</a></li>
-
-          <li><a href="#section4">Classical Denoising</a></li>
-          <li><a href="#section4.1" class="sub">Approach</a></li>
-          <li><a href="#section4.2" class="sub">Results</a></li>
-
-          <li><a href="#section5">Implementing One Step Denoising</a></li>
-          <li><a href="#section5.1" class="sub">Approach</a></li>
-          <li><a href="#section5.2" class="sub">Results</a></li>
-
-          <li><a href="#section6">Implementing Iterative Denoising</a></li>
-          <li><a href="#section6.1" class="sub">Approach</a></li>
-          <li><a href="#section6.2" class="sub">Results</a></li>
-
-          <li><a href="#section7">Diffusion Model Sampling</a></li>
-          <li><a href="#section7.1" class="sub">Approach</a></li>
-          <li><a href="#section7.2" class="sub">Results</a></li>
-
-          <li><a href="#section8">Classifier Free Guidance</a></li>
-          <li><a href="#section8.1" class="sub">Approach</a></li>
-          <li><a href="#section8.2" class="sub">Results</a></li>
-
-          <li><a href="#section9">Image-to-image Translation</a></li>
-          <li><a href="#section9.1" class="sub">Approach</a></li>
-          <li><a href="#section9.2" class="sub">Results</a></li>
-
-          <li><a href="#section10">Editing Hand-Drawn and Web Images</a></li>
-          <li><a href="#section10.1" class="sub">Approach</a></li>
-          <li><a href="#section10.2" class="sub">Results</a></li>
-
-          <li><a href="#section11">Inpainting</a></li>
-          <li><a href="#section11.1" class="sub">Approach</a></li>
-          <li><a href="#section11.2" class="sub">Results</a></li>
-
+          <li><a href="#section0">Introduction</a></li>
           <li>
-            <a href="#section12">Text-Conditioned Image-to-image Translation</a>
+            <a href="#section1">Part 1: Fit a Neural Field to a 2D Image</a>
           </li>
-          <li><a href="#section12.1" class="sub">Approach</a></li>
-          <li><a href="#section12.2" class="sub">Results</a></li>
-
-          <li><a href="#section13">Visual Anagrams</a></li>
-          <li><a href="#section13.1" class="sub">Approach</a></li>
-          <li><a href="#section13.2" class="sub">Results</a></li>
-
-          <li><a href="#section14">Hybrid Images</a></li>
-          <li><a href="#section14.1" class="sub">Approach</a></li>
-          <li><a href="#section14.2" class="sub">Results</a></li>
-
           <li>
-            <a href="#section15">Training a Single-step Denoising UNet</a>
+            <a href="#section2"
+              >Part 2: Fit a Neural Radiance Field from Multi-view Images</a
+            >
           </li>
-          <li><a href="#section16">Training a Diffusion Model</a></li>
+          <li><a href="#section21">Part 2.1: Create Rays from Cameras</a></li>
+          <li><a href="#section22">Part 2.2: Sampling</a></li>
+          <li>
+            <a href="#section23"
+              >Part 2.3: Putting the dataloader all together</a
+            >
+          </li>
+          <li><a href="#section24">Part 2.4: Neural Radiance Field</a></li>
+          <li><a href="#section25">Part 2.5: Volume Rendering</a></li>
         </ul>
       </nav>
 
       <main class="content">
-        <section id="section1">
-          <h1>Project 5 - Diffusion Models</h1>
+        <section id="section0">
+          <h1>Final Project - Neural Radiance Field</h1>
           <p>Filip Malm-Bägén</p>
           <hr />
           <img id="hero" src="../img/A/18.png" alt="Hero" />
-          <h2>Part A - Introduction</h2>
-          <p>
-            This first part of the project goes through image diffusion models
-            amd diffusion sampling loops. The goal is to get used to diffusion
-            models and use them for other tasks such as inpainting and creating
-            optical illusions.
-          </p>
-        </section>
-
-        <!-- Part A -->
-        <section id="section0">
-          <h2>0. Sampling from the Model</h2>
-          <p></p>
-
-          <section id="section0.1">
-            <h3>Approach</h3>
-            <p>
-              I ran the code for <code>num_inference_steps = 5, 10, 100</code>.
-              The quality of the images, especially for the man, improved with
-              more inference steps.
-            </p>
-          </section>
-
-          <section id="section0.2">
-            <h3>Results</h3>
-            <figure>
-              <img src="../img/A/setup_5.png" alt="" />
-              <img src="../img/A/setup_10.png" alt="" />
-              <img src="../img/A/setup_100.png" alt="" />
-              <figcaption></figcaption>
-            </figure>
-
-            <!-- TODO: Add figures for different num_inference_steps and reflect on the quality of the outputs and their relationships to the text prompts -->
-          </section>
+          <h2>Introduction</h2>
+          <p>This project is about fitting a Neural Field to a 2D Image.</p>
         </section>
 
         <!-- Part 1 -->
+        <section id="section1">
+          <h2>Part 1: Fit a Neural Field to a 2D Image</h2>
+          <p>
+            The main task was to fit a neural field <code>F</code> that maps 2D
+            pixel coordinates <code>{u, v}</code> to RGB color values
+            <code>{r, g, b}</code>. To achieve this, I implemented a
+            <code>Multi_Layer_Perceptron</code> class with the following
+            architecture:
+          </p>
+
+          <figure>
+            <img src="../data/result/2dmlp.png" alt="MLP Architecture" />
+            <figcaption>2D MLP Architecture</figcaption>
+          </figure>
+
+          <p>
+            The inputs to the network were augmented using Sinusoidal Positional
+            Encoding (PE) using <code>get_PE</code>, which expands the input
+            dimensionality from 2 to <code>4 * L + 2</code> based on the
+            frequency level <code>L</code>. To train on large images, I had to
+            implement a dataloader class, <code>RandomPixelSampler</code>, which
+            samples <code>N</code> random pixels per iteration and returns both
+            their normalized coordinates and RGB values.
+          </p>
+          <p>
+            During the last step, I experimented with different hyperparameters
+            to see how the results was effected. As seen in the images, the base
+            configuration performed the best. The reduced frequency made the fox
+            look more smooth and cartoonish. This is no surprise since the
+            reduced frequency makes the network less sensitive to high-frequency
+            details. The wider configuration and higher learning rate did
+            perform the worst, as they resulted in black images. This result is
+            also confirmed by the PSNR graph. However, this was not the case for
+            the palace image, where the wider configuration performed the best.
+            This is likely due to the increased complexity of the image.
+          </p>
+          <!-- TODO: Add another image and original images -->
+
+          <!-- Table -->
+          <table>
+            <caption>
+              Neural Field Network Configurations and Hyperparameters
+            </caption>
+
+            <tr>
+              <th>Configuration</th>
+              <th>Channel Size</th>
+              <th>Learning Rate</th>
+              <th>L</th>
+            </tr>
+            <tr>
+              <td>Base</td>
+              <td>256</td>
+              <td>1e-2</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td>Reduced Freq</td>
+              <td>256</td>
+              <td>1e-2</td>
+              <td>3 (Reduced frequency)</td>
+            </tr>
+            <tr>
+              <td>Wider</td>
+              <td>512 (Double channel size)</td>
+              <td>1e-2</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td>Higher LR</td>
+              <td>256</td>
+              <td>1e-1 (Higher learning rate)</td>
+              <td>10</td>
+            </tr>
+          </table>
+
+          <p>The images represent iteration [1, 20, 100, 500, 1000, 2000]</p>
+
+          <figure>
+            <img
+              src="../data/result/base_fox.png"
+              alt="Base configuration on fox"
+            />
+            <figcaption>Base configuration on fox</figcaption>
+
+            <img
+              src="../data/result/reduced_freq_fox.png"
+              alt="Reduced frequency on fox"
+            />
+            <figcaption>Reduced frequency on fox</figcaption>
+
+            <img src="../data/result/wider_fox.png" alt="Wider on fox" />
+            <figcaption>Wider on fox</figcaption>
+
+            <img
+              src="../data/result/higher_lr_fox.png"
+              alt="Higher learning rate on fox"
+            />
+            <figcaption>Higher learning rate on fox</figcaption>
+          </figure>
+
+          <figure>
+            <img src="../data/result/PSNR_vs_iter_fox.png" alt="PSNR fox" />
+            <figcaption>PSNR for different configurations for fox</figcaption>
+          </figure>
+
+          <figure>
+            <img
+              src="../data/result/base_palace.png"
+              alt="Base configuration on palace"
+            />
+            <figcaption>Base configuration on palace</figcaption>
+
+            <img
+              src="../data/result/reduced_freq_palace.png"
+              alt="Reduced frequency on palace"
+            />
+            <figcaption>Reduced frequency on palace</figcaption>
+
+            <img src="../data/result/wider_palace.png" alt="Wider on palace" />
+            <figcaption>Wider on palace</figcaption>
+
+            <img
+              src="../data/result/higher_lr_palace.png"
+              alt="Higher learning rate on palace"
+            />
+            <figcaption>Higher learning rate on palace</figcaption>
+          </figure>
+
+          <figure>
+            <img
+              src="../data/result/PSNR_vs_iter_palace.png"
+              alt="PSNR palace"
+            />
+            <figcaption>
+              PSNR for different configurations for palace
+            </figcaption>
+          </figure>
+
+          <p>
+            The reconstruction quality was evaluated using the Peak
+            Signal-to-Noise Ratio (PSNR), calculated as
+            <code>PSNR = 10 * log10(1 / MSE)</code>
+          </p>
+        </section>
+
+        <!-- Part 2 -->
         <section id="section2">
-          <h2>1. Sampling Loops</h2>
-          <p></p>
-
-          <section id="section2.1">
-            <h3>Approach</h3>
-            <p>
-              Starting from a clean image, noise was progressively added at each
-              timestep until reaching pure noise at T = 1000. Using the model, I
-              reversed this process by predicting and removing noise
-              step-by-step to reconstruct the original image. Noise levels were
-              controlled by DeepFloyd’s pre-set coefficients,
-              <code>alphas_cumprod</code>. The sample image was resized to 64
-              &times; 64, scaled to [-1, 1], and prepared as input for the
-              denoising process. The random seed I am using is 3141592.
-            </p>
-          </section>
-
-          <section id="section2.2">
-            <h3>Results</h3>
-            <figure>
-              <img src="../img/A/1.png" alt="" />
-              <figcaption></figcaption>
-            </figure>
-
-            <!-- TODO: Add figures for different num_inference_steps and reflect on the quality of the outputs and their relationships to the text prompts -->
-          </section>
-        </section>
-
-        <!-- Section 1.1 -->
-        <section id="section3">
-          <h2>1.1 - Implementing the forward process</h2>
-          <p></p>
-
-          <section id="section3.1">
-            <h3>Approach</h3>
-            <p>
-              I implemented the forward process to simulate noise addition to a
-              clean image at varying levels. Given a clean image
-              <code>x_0</code>, the forward process generates a noisy image
-              <code>x_t</code> at timestep <code>t</code> by sampling from a
-              Gaussian distribution with mean
-              <code>sqrt(alphas_cumprod[t]) * x_0</code> and variance
-              <code>(1 - alphas_cumprod[t])</code>. Using the function
-              <code>forward</code>, I applied this process to the test image for
-              noise levels <code>t = 250, 500,</code> and <code>750</code>,
-              resulting in progressively noisier images as expected.
-            </p>
-          </section>
-
-          <section id="section3.2">
-            <h3>Results</h3>
-            <figure>
-              <img
-                src="../img/A/11.png"
-                alt="Test image with noise levels 250, 500, 750"
-              />
-              <figcaption>
-                Test image with noise levels 250, 500, 750
-              </figcaption>
-            </figure>
-          </section>
-        </section>
-
-        <!-- Section 1.2 -->
-        <section id="section4">
-          <h2>1.2 - Classical Denoising</h2>
-          <p></p>
-
-          <section id="section4.1">
-            <h3>Approach</h3>
-            <p>
-              Denoising techniques was applied to the noisy images from
-              timesteps 250, 500, and 750 using
-              <code>Gaussian blur filtering</code>. Each noisy image was
-              processed with
-              <code>torchvision.transforms.functional.gaussian_blur</code> to
-              attempt noise reduction. The results were displayed side by side
-              to compare the effectiveness of Gaussian denoising on each image.
-              Achieving significant noise reduction proved challenging due to
-              the limitations of classical filtering methods with high-noise
-              images.
-            </p>
-          </section>
-
-          <section id="section4.2">
-            <h3>Results</h3>
-            <figure>
-              <div style="display: flex; flex-direction: column; width: 520px">
-                <img src="../img/A/11.png" alt="" />
-                <img src="../img/A/12.png" alt="" />
-              </div>
-              <figcaption>
-                Test image with gaussian blur for noise levels 250, 500, 750
-                compared to the noise images
-              </figcaption>
-            </figure>
-          </section>
-        </section>
-
-        <!-- Section 1.3 -->
-        <section id="section5">
-          <h2>1.3 - Implementing One Step Denoising</h2>
-          <p></p>
-
-          <section id="section5.1">
-            <h3>Approach</h3>
-            <p>
-              Here, I used a pretrained UNet, to perform one-step denoising on
-              noisy images. This UNet was trained on a vast dataset of image
-              pairs
-              <code>(x_0, x_t)</code> and can estimate the noise present in a
-              noisy image <code>x_t</code> when given a specific timestep
-              <code>t</code>. By estimating the noise, I was able to subtract it
-              (while applying the necessary scaling, as per equation 2) to
-              recover an approximation of the original image <code>x_0</code>.
-              This process was applied to images with noise levels
-              <code>t = [250, 500, 750]</code>, and the results were visualized
-              side-by-side, showing the original, noisy, and estimated denoised
-              images.
-            </p>
-          </section>
-
-          <section id="section5.2">
-            <h3>Results</h3>
-            <figure>
-              <img
-                style="width: 50%"
-                src="../img/A/13.png"
-                alt="Original image, noisy image and estimated original image for t = 250, 500, 750"
-              />
-              <figcaption>
-                Original image, noisy image and estimated original image for t =
-                250, 500, 750
-              </figcaption>
-            </figure>
-          </section>
-        </section>
-
-        <!-- Section 1.4 -->
-        <section id="section6">
-          <h2>1.4 - Implementing Iterative Denoising</h2>
-          <p></p>
-
-          <section id="section6.1">
-            <h3>Approach</h3>
-            <p>
-              Next, I implemented iterative denoising by starting with a noisy
-              image at <code>t = 990</code>, and I progressively reduced noise
-              at strided timesteps, which interpolates between signal and noise.
-              Key parameters like <code>alpha</code>, <code>beta</code>, and
-              <code>alphas_cumprod</code> were computed at each step, with
-              variance added via the <code>add_variance</code> function to mimic
-              training conditions. Intermediate results every 5 steps showed
-              gradual noise reduction.
-            </p>
-          </section>
-
-          <section id="section6.2">
-            <h3>Results</h3>
-            <figure>
-              <img
-                src="../img/A/14.png"
-                alt="Original, noisy, iterative denoised, one step denoised and gaussian blurred image next to each other"
-              />
-              <figcaption>
-                Original, noisy, iterative denoised, one step denoised and
-                gaussian blurred image next to each other
-              </figcaption>
-            </figure>
-          </section>
-        </section>
-
-        <!-- Section 1.5 -->
-        <section id="section7">
-          <h2>1.5 - Diffusion Model Sampling</h2>
-
-          <section id="section7.1">
-            <h3>Approach</h3>
-            <p>
-              A diffusion model was used to generate images from scratch by
-              denoising pure random noise. The process involved creating random
-              noise tensors using <code>torch.randn</code> and then denoising
-              the tensors with the <code>iterative_denoise</code> function. We
-              applied a prompt embedding for "a high quality photo" to guide the
-              generation process and repeated this five times to produce unique
-              images.
-            </p>
-          </section>
-
-          <section id="section7.2">
-            <h3>Results</h3>
-            <figure>
-              <img src="../img/A/15.png" alt="5 sampled images" />
-              <figcaption>5 sampled images</figcaption>
-            </figure>
-          </section>
-        </section>
-
-        <!-- Section 1.6 -->
-        <section id="section8">
-          <h2>1.6 - Classifier Free Guidance</h2>
-
-          <section id="section8.1">
-            <h3>Approach</h3>
-            <p>
-              I used Classifier-Free Guidance (CFG) to enhance image quality by
-              combining conditional and unconditional noise estimates with a
-              scaling factor, γ, set to 7. This involved implementing the
-              <code>iterative_denoise_cfg</code> function, which denoises images
-              using both a prompt embedding for "a high quality photo" and an
-              empty prompt embedding for unconditional guidance. The UNet model
-              was run twice at each timestep to compute the conditional and
-              unconditional noise estimates, which were then combined using the
-              CFG formula. I did this five times, to generate images with
-              significantly improved quality compared to the previous section.
-            </p>
-          </section>
-
-          <section id="section8.2">
-            <h3>Results</h3>
-            <figure>
-              <img
-                src="../img/A/16.png"
-                alt="5 images of a high quality photo, with CFG scale of γ = 7"
-              />
-              <figcaption>
-                5 images of "a high quality photo, with CFG scale of γ = 7
-              </figcaption>
-            </figure>
-          </section>
-        </section>
-
-        <!-- Section 1.7 -->
-        <section id="section9">
-          <h2>1.7 - Image-to-image Translation</h2>
-
-          <section id="section9.1">
-            <h3>Approach</h3>
-            <p>
-              I used the SDEdit algorithm to refine noisy images back to
-              natural-looking ones. Starting with the test image, I added noise
-              and denoised it using the
-              <code>iterative_denoise_cfg</code> function with starting indices
-              [1, 3, 5, 7, 10, 20]. The process was guided by the prompt "a high
-              quality photo" and a CFG scale of 7. I also repeated this on two
-              other test images to show how the method works for different
-              inputs. The model seems to have a bias agains women, as the
-              generated images mostly contain women, even though the original
-              image has nothing to do with it.
-            </p>
-          </section>
-
-          <section id="section9.2">
-            <h3>Results</h3>
-            <figure>
-              <img
-                src="../img/A/17.png"
-                alt="Edits of the test image, using the given prompt at noise levels [1, 3, 5, 7, 10, 20] with text prompt 'a high quality photo'"
-              />
-              <figcaption>
-                Edits of the test image, using the given prompt at noise levels
-                [1, 3, 5, 7, 10, 20] with text prompt "a high quality photo"
-              </figcaption>
-            </figure>
-
-            <div style="display: flex">
-              <figure>
-                <img src="../img/A/17-1.png" alt="Edits of the windmill" />
-                <figcaption>Edits of the windmill</figcaption>
-              </figure>
-
-              <figure>
-                <img
-                  src="../img/A/windmill.jpg"
-                  alt="Original image of a windmill"
-                />
-                <figcaption>Original image of a windmill</figcaption>
-              </figure>
-            </div>
-
-            <div style="display: flex">
-              <figure>
-                <img src="../img/A/17-2.png" alt="Edits of myself" />
-                <figcaption>Edits of myself</figcaption>
-              </figure>
-
-              <figure>
-                <img src="../img/A/filip.jpg" alt="Original image of me" />
-                <figcaption>Original image of me</figcaption>
-              </figure>
-            </div>
-          </section>
-        </section>
-
-        <!-- Section 1.7.1 -->
-        <section id="section10">
-          <h2>1.7.1 - Editing Hand-Drawn and Web Images</h2>
-
-          <section id="section10.1">
-            <h3>Approach</h3>
-            <p>
-              I experimented with editing non-realistic images, including one
-              downloaded from the web and two hand-drawn images. Using the
-              <code>iterative_denoise_cfg</code> function, I applied the same
-              noise levels ([1, 3, 5, 7, 10, 20]) to project these images onto
-              the natural image manifold. The preprocessing steps ensured the
-              input images fit the model's requirements, with resizing and
-              normalization. Results demonstrate how effectively the algorithm
-              transforms diverse inputs into photorealistic images.
-            </p>
-          </section>
-
-          <section id="section10.2">
-            <h3>Results - Web Image</h3>
-            <div style="display: flex">
-              <figure>
-                <img src="../img/A/pettson.jpg" alt="Original image" />
-                <figcaption>Original image</figcaption>
-              </figure>
-
-              <figure>
-                <img
-                  src="../img/A/171-1.png"
-                  alt="Edit at different noise levels"
-                />
-                <figcaption>Edit at different noise levels</figcaption>
-              </figure>
-            </div>
-
-            <h3>Results - Hand drawn image</h3>
-            <div style="display: flex">
-              <figure>
-                <img src="../img/A/171-2-original.png" alt="Original image" />
-                <figcaption>Original image</figcaption>
-              </figure>
-
-              <figure>
-                <img
-                  src="../img/A/171-2.png"
-                  alt="Edit at different noise levels"
-                />
-                <figcaption>Edit at different noise levels</figcaption>
-              </figure>
-            </div>
-
-            <div style="display: flex">
-              <figure>
-                <img src="../img/A/171-3-original.png" alt="Original image" />
-                <figcaption>Original image</figcaption>
-              </figure>
-
-              <figure>
-                <img
-                  src="../img/A/171-3.png"
-                  alt="Edit at different noise levels"
-                />
-                <figcaption>Edit at different noise levels</figcaption>
-              </figure>
-            </div>
-          </section>
-        </section>
-
-        <!-- Section 1.7.2 -->
-        <section id="section11">
-          <h2>1.7.2 - Inpainting</h2>
-
-          <section id="section11.1">
-            <h3>Approach</h3>
-            <p>
-              This function uses a binary mask to retain the original image
-              content in unmasked areas while applying iterative denoising to
-              generate new content in masked areas. I created a mask for the
-              Campanile test image and inpainted the top of the tower.
-              Additionally, I edited two custom images using unique masks for
-              creative inpainting tasks. The results demonstrate the ability to
-              seamlessly blend original and generated content.
-            </p>
-          </section>
-
-          <section id="section11.2">
-            <h3>Result - Campanile</h3>
-            <div style="display: flex; align-items: flex-start">
-              <figure style="margin: 0">
-                <img
-                  src="../img/A/172.png"
-                  alt="Stages"
-                  style="height: 220px"
-                />
-                <figcaption>Stages</figcaption>
-              </figure>
-
-              <figure style="margin: 0">
-                <img
-                  src="../img/A/172-inpaint.png"
-                  alt="Inpainted image of the Campanile"
-                  style="height: 220px"
-                />
-                <figcaption>Inpainted image of the Campanile</figcaption>
-              </figure>
-            </div>
-
-            <h3>Results - Custom images</h3>
-            <div style="display: flex; align-items: flex-start">
-              <figure style="margin: 0">
-                <img
-                  src="../img/A/172-2-inpaint.png"
-                  alt="Stages"
-                  style="height: 220px"
-                />
-                <figcaption>Stages</figcaption>
-              </figure>
-
-              <figure style="margin: 0">
-                <img
-                  src="../img/A/172-2.png"
-                  alt="Inpainted image of the Golden Gate Bridge"
-                  style="height: 220px"
-                />
-                <figcaption>
-                  Inpainted image of the Golden Gate Bridge
-                </figcaption>
-              </figure>
-            </div>
-
-            <div style="display: flex; align-items: flex-start">
-              <figure style="margin: 0">
-                <img
-                  src="../img/A/172-3-inpaint.png"
-                  alt="Stages"
-                  style="height: 220px"
-                />
-                <figcaption>Stages</figcaption>
-              </figure>
-
-              <figure style="margin: 0">
-                <img
-                  src="../img/A/172-3.png"
-                  alt="Inpainted image of The Son of Man"
-                  style="height: 220px"
-                />
-                <figcaption>Inpainted image of The Son of Man</figcaption>
-              </figure>
-            </div>
-            <p>
-              Perfect! I have always wondered what the face behind the apple
-              looks like. Now we all know.
-            </p>
-          </section>
-        </section>
-
-        <!-- Section 1.7.3 -->
-        <section id="section12">
-          <h2>1.7.3 - Text-Conditioned Image-to-image Translation</h2>
-
-          <section id="section12.1">
-            <h3>Approach</h3>
-            <p>
-              In this step, I used the text prompt "a rocket ship" to guide how
-              an image evolves during denoising. Starting with varying noise
-              levels [1, 3, 5, 7, 10, 20], the process blends the original image
-              with rocket-themed elements. I also applied this to two of my own
-              images, showing how text prompts can creatively transform visuals!
-            </p>
-          </section>
-
-          <section id="section12.2">
-            <h3>Results</h3>
-            <figure>
-              <img
-                src="../img/A/173.png"
-                alt="Edits of the test image, using the given prompt at noise levels [1, 3, 5, 7, 10, 20]"
-              />
-              <figcaption>
-                Edits of the test image, using the given prompt at noise levels
-                [1, 3, 5, 7, 10, 20]
-              </figcaption>
-            </figure>
-
-            <h3>Results - Custom Images</h3>
-            <div style="display: flex; align-items: flex-start">
-              <figure style="margin: 0">
-                <img
-                  src="../img/A/apple.jpg"
-                  alt="Original image of an apple"
-                  style="height: 220px"
-                />
-                <figcaption>Original image of an apple</figcaption>
-              </figure>
-
-              <figure style="margin: 0">
-                <img
-                  src="../img/A/173-2.png"
-                  alt="Apple image at various noise levels for the prompt 'a rocket ship'."
-                  style="height: 220px"
-                />
-                <figcaption>
-                  Apple image at various noise levels for the prompt 'a rocket
-                  ship'.
-                </figcaption>
-              </figure>
-            </div>
-
-            <div style="display: flex; align-items: flex-start">
-              <figure style="margin: 0">
-                <img
-                  src="../img/A/the_rock.jpg"
-                  alt="Original image of The Rock"
-                  style="height: 220px"
-                />
-                <figcaption>Original image of The Rock</figcaption>
-              </figure>
-
-              <figure style="margin: 0">
-                <img
-                  src="../img/A/173-3.png"
-                  alt="The Rock at various noise levels for the prompt 'a rocket ship'"
-                  style="height: 220px"
-                />
-                <figcaption>
-                  The Rock at various noise levels for the prompt 'a rocket
-                  ship'
-                </figcaption>
-              </figure>
-            </div>
-            <p>
-              I wanted to test the algorithm to see how it behaves on images
-              which does not resemble rocket ships at all. On a low noise level
-              it creates rocket ships, but the higher the noise, the more it
-              resembles the original image.
-            </p>
-          </section>
-        </section>
-
-        <!-- Section 1.8 -->
-        <section id="section13">
-          <h2>1.8 - Visual Anagrams</h2>
-
-          <section id="section13.1">
-            <h3>Approach</h3>
-            <p>
-              The Visual Anagrams technique creates an optical illusion where an
-              image of "an oil painting of an old man" turns into "an oil
-              painting of people around a campfire" when flipped upside down. By
-              denoising the image with two different prompts—one for the
-              original and one for the flipped version—and averaging the noise
-              estimates, we get this effect. Here’s an example where flipping
-              the image reveals a completely different scene.
-            </p>
-          </section>
-
-          <section id="section13.2">
-            <h3>Results</h3>
-            <div style="display: flex; flex-wrap: wrap; gap: 20px">
-              <figure style="flex: 1 1 30%">
-                <img
-                  src="../img/A/18.png"
-                  alt="Left: 'an oil painting of an old man'. Right: 'an oil painting of people around a campfire'"
-                  style="width: 100%"
-                />
-                <figcaption>
-                  Left: 'an oil painting of an old man'. Right: 'an oil painting
-                  of people around a campfire'
-                </figcaption>
-              </figure>
-
-              <figure style="flex: 1 1 30%">
-                <img
-                  src="../img/A/18-1.png"
-                  alt="Left: 'a photo of a hipster barista'. Right: 'a man wearing a hat'"
-                  style="width: 100%"
-                />
-                <figcaption>
-                  Left: 'a photo of a hipster barista'. Right: 'a man wearing a
-                  hat'
-                </figcaption>
-              </figure>
-
-              <figure style="flex: 1 1 30%">
-                <img
-                  src="../img/A/18-2.png"
-                  alt="Left: 'a photo of a dog'. Right: 'a pencil'"
-                  style="width: 100%"
-                />
-                <figcaption>
-                  Left: 'a photo of a dog'. Right: 'a pencil'
-                </figcaption>
-              </figure>
-            </div>
-          </section>
-        </section>
-
-        <!-- Section 1.9 -->
-        <section id="section14">
-          <h2>1.9 - Hybrid Images</h2>
-
-          <section id="section14.1">
-            <h3>Approach</h3>
-            <p>
-              The Hybrid Images technique combines low-frequency details from
-              one image and high-frequency details from another using a
-              diffusion model. By generating separate noise estimates for each
-              image with different text prompts and applying low-pass and
-              high-pass filters, we blend the two to create an image that looks
-              like one object from afar and another up close.
-            </p>
-          </section>
-
-          <section id="section14.2">
-            <h3>Results</h3>
-            <div style="display: flex; flex-wrap: wrap; gap: 20px">
-              <figure style="flex: 1 1 30%">
-                <img
-                  src="../img/A/19.png"
-                  alt="Far: Image of a skull. Close: Image of a waterfall"
-                  style="width: 100%"
-                />
-                <figcaption>
-                  Far: Image of a skull. Close: Image of a waterfall
-                </figcaption>
-              </figure>
-
-              <figure style="flex: 1 1 30%">
-                <img
-                  src="../img/A/19-1.png"
-                  alt="Far: a man wearing a hat. Close: a photo of the amalfi cost"
-                  style="width: 100%"
-                />
-                <figcaption>
-                  Far: a man wearing a hat. Close: a photo of the amalfi cost
-                </figcaption>
-              </figure>
-
-              <figure style="flex: 1 1 30%">
-                <img
-                  src="../img/A/19-2.png"
-                  alt="Far: a rocket ship. Close: a pencil"
-                  style="width: 100%"
-                />
-                <figcaption>Far: a rocket ship. Close: a pencil</figcaption>
-              </figure>
-            </div>
-          </section>
-        </section>
-
-        <!-- Final remarks for Part A -->
-        <section>
-          <h3>Final remarks for Part A</h3>
+          <h2>Part 2: Fit a Neural Radiance Field from Multi-view Images</h2>
           <p>
-            I thought this part was very cool and very interesting. I learned a
-            lot of new things, and I look forward to part B.
+            This part involves using a Neural Radiance Field (NeRF) to represent
+            a 3D scene by learning a mapping from position and view direction to
+            color and density:
+            <code>F: {x, y, z, d} → {r, g, b, σ}</code>. Using multi-view
+            calibrated images of a Lego scene (200x200 resolution) and their
+            corresponding camera poses, the task aims to perform inverse
+            rendering. The provided data includes camera-to-world matrices for
+            training, validation, and test cameras.
           </p>
         </section>
 
-        <!-- Part B -->
-        <section id="section15">
-          <h2>Part B - Training Your Own Diffusion Model!</h2>
-          <p></p>
-        </section>
-
-        <!-- Part 1 -->
-        <section id="section15">
-          <h2>1 - Training a Single-step Denoising UNet</h2>
-
-          <section id="section15.1">
-            <p>
-              I implemented U-Net which takes a noisy image as input and
-              predicts the noise from the original image. It consists of down
-              and upsampling blcok with skip connections. This captures both
-              global and local features. The UNet structure is good for
-              image-to-image task, for example denoising.
-            </p>
-
-            <figure>
-              <img
-                src="../img/B/unet.png"
-                alt="UNet Architecture for denoising"
-              />
-              <figcaption>UNet Architecture for denoising</figcaption>
-            </figure>
-
-            <p>
-              Below are the results from visualizing the effect of
-              <code>sigma=0.5</code> on adding noise to the image, so the model
-              only sees one sigma. The loss quickly reduces and the train and
-              test loss intersects at around 0.009.
-            </p>
-
-            <figure>
-              <img src="../img/B/1.png" alt="" />
-              <figcaption></figcaption>
-            </figure>
-
-            <p>
-              For training, I used the image class pairs from MNIST dataset. I
-              used <code>batch_size = 256</code>, <code>num_epochs = 5</code>,
-              <code>sigma = 0.5</code>, and the Adam optimizer with a learning
-              rate of 0.0001.
-            </p>
-
-            <figure>
-              <img src="../img/B/2.png" alt="Train and Testing Loss" />
-              <figcaption>Train and Testing Loss</figcaption>
-            </figure>
-
-            <figure>
-              <img src="../img/B/3.png" alt="Train loss per iteration" />
-              <figcaption>Train loss per iteration</figcaption>
-            </figure>
-
-            <p>
-              Below, the results from the training can be seen, where the
-              performacce between the results from 1 epoch and 5 epochs can be
-              seen. The model is much better at denoising after 5 epochs.
-            </p>
-
-            <div style="display: flex; gap: 20px">
-              <figure>
-                <img
-                  src="../img/B/4.png"
-                  alt="Sample denoised images for epoch 1"
-                />
-                <figcaption>Sample denoised images for epoch 1</figcaption>
-              </figure>
-
-              <figure>
-                <img
-                  src="../img/B/5.png"
-                  alt="Sample denoised images for epoch 5"
-                />
-                <figcaption>Sample denoised images for epoch 5</figcaption>
-              </figure>
-            </div>
-
-            <p>
-              It is interesting to observe its performance with different sigma
-              values, representing higher and lower noise levels than those used
-              during training. The image below illustrates this performance.
-            </p>
-
-            <figure>
-              <img
-                src="../img/B/6.png"
-                alt="Different values of sigma, when trained on sigma = 0.5"
-              />
-              <figcaption>
-                Different values of sigma, when trained on
-                <code>sigma = 0.5</code>
-              </figcaption>
-            </figure>
-          </section>
-        </section>
-
-        <!-- part 2 -->
-        <section id="section16">
-          <h2>2 - Training a Diffusion Model</h2>
-
-          <section id="section16.1">
-            <p>
-              In the previous section, the UNet model was designed to predict
-              the clean image directly. In this section, I modify the approach
-              to predict the noise ϵ that was added to the image. This
-              adjustment enables us to begin with pure noise ϵ ∼ N(0, I) and
-              progressively denoise it to produce a realistic image x.
-            </p>
-
-            <h3>Combination of Time and Class Conditioning</h3>
-            <p>
-              We condition the UNet on both the timestep t and the digit class
-              simultaneously. Using the equation: xt = √ᾱtx0 + √(1−ᾱt)ϵ, where
-              ϵ∼N(0,1), we generate a noisy image xt from x0 for a timestep
-              t∈{0,1,…,T}. At t=0, xt is the original clean image, and at t=T,
-              xt is entirely noise. For intermediate values of t, xt is a blend
-              of the clean image and noise. We set T = 400 due to the simplicity
-              of our dataset. Time conditioning is incorporated using fully
-              connected layers to embed t into the UNet, and class conditioning
-              uses one-hot vectors and additional fully connected layers to
-              embed the class vector. Below is the updated UNet architecture,
-              which includes both time and class conditioning, as well as the
-              new training algorithm used.
-            </p>
-
-            <div style="display: flex; gap: 20px">
-              <figure>
-                <img
-                  src="../img/B/unet_update.png"
-                  alt="UNet Architecture for denoising with time and class conditioning"
-                />
-                <figcaption>
-                  UNet Architecture for denoising with time and class
-                  conditioning
-                </figcaption>
-              </figure>
-
-              <figure>
-                <img
-                  src="../img/B/algorithm1.png"
-                  alt="Training algorithm with time and class conditioning"
-                />
-                <figcaption>
-                  Training algorithm with time and class conditioning
-                </figcaption>
-              </figure>
-            </div>
-
-            <p>
-              During training, noisy images, xt, are created for random
-              timesteps, and their one-hot class vectors are computed. The UNet
-              is then trained to predict ϵ. By incorporating class conditioning,
-              we achieve better control over the generated images, while time
-              conditioning facilitates iterative denoising. The results below,
-              after the twentieth epoch, demonstrate that the model performs
-              exceptionally well, producing accurate and detailed numbers. Below
-              is the results from the time and class conditional UNet.
-            </p>
-
-            <figure>
-              <img
-                src="../img/B/7.png"
-                alt="Training loss for the batch size"
-              />
-              <figcaption>Training loss for the batch size</figcaption>
-            </figure>
-
-            <div style="display: flex; flex-direction: column">
-              <figure>
-                <img
-                  src="../img/B/8.png"
-                  alt="Sample after 1 epochs, guidensescale = 5"
-                />
-                <figcaption>
-                  Sample after 1 epochs, <code>guidensescale = 5</code>
-                </figcaption>
-              </figure>
-
-              <figure>
-                <img
-                  src="../img/B/9.png"
-                  alt="Sample after 5 epochs, guidensescale = 5"
-                />
-                <figcaption>
-                  Sample after 5 epochs, <code>guidensescale = 5</code>
-                </figcaption>
-              </figure>
-
-              <figure>
-                <img
-                  src="../img/B/10.png"
-                  alt="Sample after 20 epochs, guidensescale = 5"
-                />
-                <figcaption>
-                  Sample after 20 epochs, <code>guidensescale = 5</code>
-                </figcaption>
-              </figure>
-            </div>
-
-            <p>
-              We can compare this to the Time Conditioned UNet which has no
-              classes. The results can be seen below. As seen, the numbers are
-              not as good without the classifier free guidance.
-            </p>
-
-            <figure>
-              <img
-                src="../img/B/11.png"
-                alt="Training loss for the batch loss"
-              />
-              <figcaption>Training loss for the batch loss</figcaption>
-            </figure>
-
-            <div style="display: flex; flex-direction: column">
-              <figure>
-                <img
-                  src="../img/B/12.png"
-                  alt="Sample after 1 epochs, guidensescale = 5"
-                />
-                <figcaption>
-                  Sample after 1 epochs, <code>guidensescale = 5</code>
-                </figcaption>
-              </figure>
-
-              <figure>
-                <img
-                  src="../img/B/13.png"
-                  alt="Sample after 5 epochs, guidensescale = 5"
-                />
-                <figcaption>
-                  Sample after 5 epochs, <code>guidensescale = 5</code>
-                </figcaption>
-              </figure>
-
-              <figure>
-                <img
-                  src="../img/B/14.png"
-                  alt="Sample after 20 epochs, guidensescale = 5"
-                />
-                <figcaption>
-                  Sample after 20 epochs, <code>guidensescale = 5</code>
-                </figcaption>
-              </figure>
-            </div>
-          </section>
-        </section>
-
-        <!-- Final remarks for Part B -->
-        <section>
-          <h3>Final remarks for Part B</h3>
+        <section id="section21">
+          <h3>Part 2.1: Create Rays from Cameras</h3>
           <p>
-            This was a very fun and cool project. The most interesting part was
-            the classifier free guidance, where the model was able to generate
-            very good numbers.
+            To render the 3D scene, I implemented functions to convert pixel
+            coordinates into rays, defined by their origin (<code
+              >r<sub>o</sub></code
+            >) and normalized direction (<code>r<sub>d</sub></code
+            >). The process involves several steps: First, coordinate
+            transformations are performed. A function transforms camera
+            coordinates to world coordinates using the camera-to-world
+            (<code>c2w</code>) matrix. Another function transforms pixel
+            coordinates to camera coordinates using the intrinsic matrix and
+            pixel depth. For ray generation, the ray origin is the camera's
+            translation vector (<code>t</code>), and the direction is computed
+            by normalizing the difference between the world coordinate of a
+            depth-1 point and the origin. These transformations are implemented
+            using batched matrix multiplications for efficiency.
           </p>
+        </section>
+
+        <section id="section22">
+          <h3>Part 2.2: Sampling</h3>
+          <p>
+            Next, I developed ray sampling methods. I trained the model using a
+            batch size of 10k rays. These rays were generated by randomly
+            sampling 10k pixels globally across the training set of 100 images.
+            To accelerate the training process, all rays and pixel coordinates
+            were precomputed at the start. To render the 3D scene, each ray was
+            discretized into sampled points along its path. This step allows
+            querying points to integrate their colors for determining the final
+            color rendered at a particular pixel. Using uniform sampling, I
+            generated points along each ray as:
+            <code>t = np.linspace(near, far, n_samples)</code>, where
+            <code>near=2.0</code>, <code>far=6.0</code>, and
+            <code>n_samples=64</code>. The 3D coordinates for these points were
+            calculated as: <code>x = r_o + r_d * t</code>, where
+            <code>r_o</code> represents the ray origin, and <code>r_d</code> the
+            ray direction. I added perturbations during training,
+            <code>t = t + np.random.rand(t.shape) * t_width</code>. This ensures
+            that all locations along the ray are touched.
+          </p>
+        </section>
+
+        <section id="section23">
+          <h3>Part 2.3: Putting the dataloader all together</h3>
+          <p>
+            I ran the code to verify that I had implement everything correctly.
+            The following images are some sanity checks to verify it.
+          </p>
+
+          <!-- TODO: Run viser and add figures -->
+          <figure></figure>
+        </section>
+
+        <section id="section24">
+          <h3>Part 2.4: Neural Radiance Field</h3>
+          <p>
+            The Neural Radiance Field was implemented as a deep neural network
+            that maps spatial coordinates and viewing directions to color and
+            density values. This network was enhanced to handle
+            higher-dimensional inputs (3D position and view direction vectors)
+            and outputs (RGB colors plus density), compared to the MLP from part
+            1. The complete network architecture is illustrated below:
+          </p>
+
+          <figure>
+            <img src="../data/result/mlp_nerf.png" alt="3D MLP Architecture" />
+            <figcaption>3D MLP Architecture</figcaption>
+          </figure>
+        </section>
+
+        <section id="section25">
+          <h3>Part 2.5: Volume Rendering</h3>
+          <p>
+            Volume rendering integrates color values along each ray to produce
+            the final pixel color. At each sampled point along a ray, the
+            network predicts both color and density values. These values are
+            then combined using a numerical approximation of the volume
+            rendering equation. The rendering process works by accumulating
+            colors from back to front along each ray, using density values (σ)
+            to determine opacity at each point, weighting colors based on
+            transmittance (how much light passes through), and computing
+            distance intervals (δᵢ) between sampled points.
+          </p>
+
+          <p>
+            The implementation uses PyTorch's <code>torch.cumprod</code> for
+            efficient calculation of transmittance values. The distance
+            intervals δᵢ are derived from the sampling points generated earlier
+            in the pipeline. This numerical approximation enables efficient
+            parallel computation across all rays in a batch.
+          </p>
+
+          <div class="equation">
+            \[\begin{align} \hat{C}(\mathbf{r})=\sum_{i=1}^N T_i\left(1-\exp
+            \left(-\sigma_i \delta_i\right)\right) \mathbf{c}_i, \text{ where }
+            T_i=\exp \left(-\sum_{j=1}^{i-1} \sigma_j \delta_j\right)
+            \end{align}\]
+          </div>
+
+          <p>
+            I trained using Adam optimizer with
+            <code>learning_rate = 5e-4</code>,
+            <code>batch_size = 10_000</code> and <code>iterations = 2000</code>.
+            The images below are visualizations of the training process.
+          </p>
+
+          <figure>
+            <img src="../data/result/nerf.png" alt="NeRF" />
+            <figcaption>NeRF</figcaption>
+          </figure>
+
+          <p>
+            The following image is the PSNR curve over the iterations. The PSNR
+            is steadily increasing, and I believe that the model could acieve a
+            PSNR greater than 30 if trained for more iterations.
+          </p>
+
+          <figure>
+            <img src="../data/result/PSNR_vs_iter_nerf.png" alt="PSNR NeRF" />
+            <figcaption>PSNR for NeRF</figcaption>
+          </figure>
+
+          <p>
+            The final image is the rendered image of the Lego scene. The
+            rendering quality is quite good, and the model has learned to
+            represent the scene well. Text to it is the depth image, which
+            represents the distance from the camera to the object. The darker
+            the pixel, the closer it is to the camera. The difference is that
+            the depth rendering only uses the density value, while the color
+            rendering uses both the color and density values.
+          </p>
+
+          <figure>
+            <img src="../data/result/nerf_render.png" alt="NeRF Render" />
+            <figcaption>NeRF Render</figcaption>
+
+            <img src="../data/result/nerf_depth.png" alt="NeRF Depth" />
+            <figcaption>NeRF Depth</figcaption>
+          </figure>
         </section>
 
         <p>
@@ -1088,5 +401,11 @@
         updateIcons();
       });
     </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
   </body>
 </html>
