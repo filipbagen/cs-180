@@ -48,7 +48,12 @@
           <h1>Final Project - Neural Radiance Field</h1>
           <p>Filip Malm-Bägén</p>
           <hr />
-          <img id="hero" src="../img/A/18.png" alt="Hero" />
+          <img
+            id="hero"
+            src="../code/results/nerf.gif"
+            alt="Hero"
+            loop="infinite"
+          />
           <h2>Introduction</h2>
           <p>
             This project is about implementing neural radiance fields (NeRFs) to
@@ -289,11 +294,15 @@
           <h3>Part 2.3: Putting the dataloader all together</h3>
           <p>
             I ran the code to verify that I had implement everything correctly.
-            The following images are some sanity checks to verify it.
           </p>
 
-          <!-- TODO: Run viser and add figures -->
-          <figure></figure>
+          <figure>
+            <img
+              src="../code/results/viser.png"
+              alt="100 Randomly Sampled Rays"
+            />
+            <figcaption>100 Randomly Sampled Rays</figcaption>
+          </figure>
         </section>
 
         <section id="section24">
@@ -344,14 +353,76 @@
 
           <p>
             I trained using Adam optimizer with
-            <code>learning_rate = 5e-4</code>,
-            <code>batch_size = 10_000</code> and <code>iterations = 2000</code>.
+            <code>learning_rate = 1e-3</code>,
+            <code>batch_size = 10_000</code> and <code>iterations = 2500</code>.
             The images below are visualizations of the training process.
           </p>
 
           <figure>
-            <img src="../data/result/nerf.png" alt="NeRF" />
-            <figcaption>NeRF</figcaption>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+              "
+            >
+              <div style="text-align: center">
+                <img
+                  src="../code/results/depth/render_0.jpg"
+                  alt="Depth Render 0"
+                />
+                <figcaption>Depth Render 0</figcaption>
+              </div>
+              <div style="text-align: center">
+                <img
+                  src="../code/results/depth/render_10.jpg"
+                  alt="Depth Render 10"
+                />
+                <figcaption>Depth Render 10</figcaption>
+              </div>
+              <div style="text-align: center">
+                <img
+                  src="../code/results/depth/render_20.jpg"
+                  alt="Depth Render 20"
+                />
+                <figcaption>Depth Render 20</figcaption>
+              </div>
+              <div style="text-align: center">
+                <img
+                  src="../code/results/depth/render_40.jpg"
+                  alt="Depth Render 40"
+                />
+                <figcaption>Depth Render 40</figcaption>
+              </div>
+              <div style="text-align: center">
+                <img
+                  src="../code/results/final_render/render_0.jpg"
+                  alt="Final Render 0"
+                />
+                <figcaption>Final Render 0</figcaption>
+              </div>
+              <div style="text-align: center">
+                <img
+                  src="../code/results/final_render/render_10.jpg"
+                  alt="Final Render 10"
+                />
+                <figcaption>Final Render 10</figcaption>
+              </div>
+              <div style="text-align: center">
+                <img
+                  src="../code/results/final_render/render_20.jpg"
+                  alt="Final Render 20"
+                />
+                <figcaption>Final Render 20</figcaption>
+              </div>
+              <div style="text-align: center">
+                <img
+                  src="../code/results/final_render/render_40.jpg"
+                  alt="Final Render 40"
+                />
+                <figcaption>Final Render 40</figcaption>
+              </div>
+            </div>
           </figure>
 
           <p>
@@ -360,27 +431,30 @@
             PSNR greater than 30 if trained for more iterations.
           </p>
 
-          <figure>
-            <img src="../data/result/PSNR_vs_iter_nerf.png" alt="PSNR NeRF" />
+          <figure style="text-align: center">
+            <img src="../code/results/plot.png" alt="PSNR NeRF" />
             <figcaption>PSNR for NeRF</figcaption>
           </figure>
 
           <p>
             The final image is the rendered image of the Lego scene. The
             rendering quality is quite good, and the model has learned to
-            represent the scene well. Text to it is the depth image, which
+            represent the scene well. Next to it is the depth image, which
             represents the distance from the camera to the object. The darker
             the pixel, the closer it is to the camera. The difference is that
             the depth rendering only uses the density value, while the color
             rendering uses both the color and density values.
           </p>
 
-          <figure>
-            <img src="../data/result/nerf_render.png" alt="NeRF Render" />
-            <figcaption>NeRF Render</figcaption>
-
-            <img src="../data/result/nerf_depth.png" alt="NeRF Depth" />
-            <figcaption>NeRF Depth</figcaption>
+          <figure style="display: flex; justify-content: center; gap: 20px">
+            <div>
+              <img src="../code/results/nerf.gif" alt="NeRF Render" />
+              <figcaption>NeRF Render</figcaption>
+            </div>
+            <div>
+              <img src="../code/results/depth.gif" alt="NeRF Depth" />
+              <figcaption>NeRF Depth</figcaption>
+            </div>
           </figure>
         </section>
 
